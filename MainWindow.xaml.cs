@@ -26,11 +26,6 @@ namespace Steady_Management_App
             Application.Current.Shutdown();
         }
 
-        private void ConsultarClientes_Click(object sender, RoutedEventArgs e)
-        {
-            //MainContent.Content = new ClientesListForm();
-        }
-
         private void ConsultarDepartamentos_Click(object sender, RoutedEventArgs e)
         {
             //MainContent.Content = new DepartamentosListForm();
@@ -39,11 +34,6 @@ namespace Steady_Management_App
         private void ConsultarEmpleados_Click(object sender, RoutedEventArgs e)
         {
             //MainContent.Content = new EmpleadosListForm();
-        }
-
-        private void ConsultarOrdenes_Click(object sender, RoutedEventArgs e)
-        {
-            //MainContent.Content = new OrdenesListForm();
         }
 
         private void ConsultarProductos_Click(object sender, RoutedEventArgs e)

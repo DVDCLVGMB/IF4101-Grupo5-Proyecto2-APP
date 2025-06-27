@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Steady_Management_App.Models
 {
-    public class Deparment
+    public class Department
     {
+        public int deptId { get; set; }
+        public string deptName { get; set; }
+
+
     }
 }

@@ -35,17 +35,11 @@
                     </ItemsPanelTemplate>
                 </Menu.ItemsPanel>
 
-                <!-- Cliente -->
-                <MenuItem Header="Cliente" Foreground="White" Click="ConsultarClientes_Click"> </MenuItem>
-
                 <!-- Departamento -->
                 <MenuItem Header="Departamento" Foreground="White" Click="ConsultarDepartamentos_Click"></MenuItem>
 
                 <!-- Empleado -->
                 <MenuItem Header="Empleado" Foreground="White" Click="ConsultarEmpleados_Click"></MenuItem>
-
-                <!-- Orden -->
-                <MenuItem Header="Orden" Foreground="White" Click="ConsultarOrdenes_Click"></MenuItem>
 
                 <!-- Producto-->
                 <MenuItem Header="Producto" Foreground="White" Click="ConsultarProductos_Click"></MenuItem>
