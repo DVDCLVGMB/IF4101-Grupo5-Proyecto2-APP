@@ -30,7 +30,7 @@ namespace Steady_Management_App.Views
                 var dept = departments.FirstOrDefault(d => d.DeptId == emp.DeptId);
                 var role = roles.FirstOrDefault(r => r.RoleId == emp.RoleId);
 
-                emp.DepartmentName = dept?.deptName ?? "Desconocido";
+                emp.DepartmentName = dept?.DeptName ?? "Desconocido";
                 emp.RoleName = role?.RoleName ?? "Desconocido";
             }
 

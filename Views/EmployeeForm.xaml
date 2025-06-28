@@ -48,7 +48,7 @@
         <StackPanel Grid.Row="4" Margin="0,5">
             <Label Content="Departamento:"/>
             <ComboBox x:Name="DeptComboBox"
-                      DisplayMemberPath="deptName"
+                      DisplayMemberPath="DeptName"
                       SelectedValuePath="DeptId"/>
         </StackPanel>
 
