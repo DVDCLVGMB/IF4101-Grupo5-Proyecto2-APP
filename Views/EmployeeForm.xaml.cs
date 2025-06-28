@@ -72,6 +72,7 @@ namespace Steady_Management.WPF.Views
                 else
                     await _employeeService.CreateEmployeeAsync(emp);
 
+                this.DialogResult = true;
                 this.Close();
             }
             catch

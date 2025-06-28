@@ -40,16 +40,21 @@ namespace Steady_Management_App.Views
         private void AddEmployee_Click(object sender, RoutedEventArgs e)
         {
             var form = new EmployeeForm();
-            form.Show(); // ❗ ShowDialog ya no se usa en UserControl, debe manejarse desde MainWindow si se desea una ventana emergente
-            LoadEmployees();
+            bool? result = form.ShowDialog(); // ✅ espera que se cierre
+
+            if (result == true) // ✅ se guarda solo si se presionó guardar
+                LoadEmployees();
         }
+
 
         private void EditEmployee_Click(object sender, RoutedEventArgs e)
         {
             var employee = (Employee)((FrameworkElement)sender).DataContext;
             var form = new EmployeeForm(employee.EmployeeId);
-            form.Show(); // ❗ Igual aquí
-            LoadEmployees();
+            bool? result = form.ShowDialog();
+
+            if (result == true)
+                LoadEmployees();
         }
 
         private async void DeleteEmployee_Click(object sender, RoutedEventArgs e)
