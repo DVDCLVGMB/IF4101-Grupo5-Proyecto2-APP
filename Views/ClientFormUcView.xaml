@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="Steady_Management_App.Views.ClientFormUcView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Steady_Management_App.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="600">
+
+ 
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" Grid.Row="0" Margin="10">
+            <Label Content="Nombre Empresa" />
+            <TextBox Margin="5" Text="{Binding SelectedClient.CompanyName, Mode=TwoWay}" />
+
+            <Label Content="Nombre Contacto" />
+            <TextBox Margin="5" Text="{Binding SelectedClient.ContactName, Mode=TwoWay}" />
+
+            <Label Content="Apellido Contacto" />
+            <TextBox Margin="5" Text="{Binding SelectedClient.ContactSurname, Mode=TwoWay}" />
+
+            <Label Content="Puesto" />
+            <TextBox Margin="5" Text="{Binding SelectedClient.ContactRank, Mode=TwoWay}" />
+
+            <Label Content="Teléfono" />
+            <TextBox Margin="5" Text="{Binding SelectedClient.ClientPhoneNumber, Mode=TwoWay}" />
+
+            <Label Content="Fax" />
+            <TextBox Margin="5" Text="{Binding SelectedClient.ClientFaxNumber, Mode=TwoWay}" />
+
+            <Label Content="Dirección" />
+            <TextBox Margin="5" Text="{Binding SelectedClient.ClientAddress, Mode=TwoWay}" />
+
+            <Label Content="Código Postal" />
+            <TextBox Margin="5" Text="{Binding SelectedClient.ClientPostalCode, Mode=TwoWay}" />
+ 
+            <TextBlock Text="ID Ciudad"/>
+            <TextBox Text="{Binding SelectedClient.CityId, UpdateSourceTrigger=PropertyChanged}" />
+
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="5">
+            <Button Content="Guardar" Command="{Binding SaveClientCommand}" Margin="5"/>
+            <Button Content="Cancelar" Margin="5" Click="Cancelar_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

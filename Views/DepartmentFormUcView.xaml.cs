@@ -10,25 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Steady_Management_App.Models;
 
 namespace Steady_Management_App.Views
 {
     /// <summary>
-    /// Lógica de interacción para DepartmentFormWindow.xaml
+    /// Lógica de interacción para DepartmentFormUcView.xaml
     /// </summary>
-    public partial class DepartmentFormWindow : Window
+    public partial class DepartmentFormUcView : UserControl
     {
-        public DepartmentFormWindow()
-        {
-        }
-
-        public DepartmentFormWindow(Department dept)
+        public DepartmentFormUcView()
         {
             InitializeComponent();
-            DataContext = dept;
         }
-
     }
 }

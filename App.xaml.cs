@@ -1,7 +1,8 @@
-﻿using System.Configuration;
+﻿using PedidoApp;
+using Steady_Management.WPF.Views;
+using System.Configuration;
 using System.Data;
 using System.Windows;
-using Steady_Management.WPF.Views;
 
 namespace Steady_Management_App
 {
@@ -14,7 +15,8 @@ namespace Steady_Management_App
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            new EmployeesView().Show(); // Ventana principal
+            new MainWindow().Show(); // Ventana principal real
+
         }
 
     }
