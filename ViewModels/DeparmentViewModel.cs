@@ -91,7 +91,7 @@ namespace Steady_Management_App.ViewModels
             // Copia de seguridad para editar
             var deptToEdit = new Department
             {
-                deptId = SelectedDepartment.deptId,
+                DeptId = SelectedDepartment.DeptId,
                 deptName = SelectedDepartment.deptName
             };
 
@@ -127,7 +127,7 @@ namespace Steady_Management_App.ViewModels
             {
                 try
                 {
-                    await _apiService.DeleteDepartmentAsync(SelectedDepartment.deptId);
+                    await _apiService.DeleteDepartmentAsync(SelectedDepartment.DeptId);
                     Departments.Remove(SelectedDepartment);
 
                     MessageBox.Show("Departamento eliminado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);

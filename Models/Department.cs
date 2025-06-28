@@ -8,7 +8,7 @@ namespace Steady_Management_App.Models
 {
     public class Department
     {
-        public int deptId { get; set; }
+        public int DeptId { get; set; }
         public string deptName { get; set; }
 
 

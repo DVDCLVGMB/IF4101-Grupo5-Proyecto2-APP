@@ -14,8 +14,9 @@ namespace Steady_Management_App.Services
     {
         private static readonly HttpClient client = new HttpClient();
         // La URL base ahora se lee desde el archivo de configuración global
-        private readonly string baseUrl = AppConfig.GetApiBaseUrl();
-    
+        private readonly string baseUrl = "https://localhost:7284/";
+
+
         public DepartmentService() 
         {
             if (client.BaseAddress == null)
@@ -24,7 +25,7 @@ namespace Steady_Management_App.Services
                 {
                     throw new InvalidOperationException("La URL base de la API no está configurada en appsettings.json.");
                 }
-                client.BaseAddress = new Uri("https://localhost:7298/");
+                client.BaseAddress = new Uri("https://localhost:7284/");
                 client.GetFromJsonAsync<List<Department>>("api/departments");
             }
         }
@@ -76,9 +77,9 @@ namespace Steady_Management_App.Services
         /// <summary>PUT: api/departments/{id}</summary>
         public async Task<bool> UpdateDepartmentAsync(Department d)
         {
-            var response = await client.PutAsJsonAsync($"api/departments/{d.deptId}", d);
+            var response = await client.PutAsJsonAsync($"api/departments/{d.DeptId}", d);
             if (!response.IsSuccessStatusCode)
-                Console.WriteLine($"Error PUT id={d.deptId}: {response.StatusCode}");
+                Console.WriteLine($"Error PUT id={d.DeptId}: {response.StatusCode}");
             return response.IsSuccessStatusCode;
         }
 

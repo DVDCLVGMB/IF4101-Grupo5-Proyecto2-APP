@@ -1,0 +1,69 @@
+﻿<Window x:Class="Steady_Management.WPF.Views.EmployeeForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Empleado" Height="480" Width="400">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Nombre -->
+            <RowDefinition Height="Auto"/>
+            <!-- Apellido -->
+            <RowDefinition Height="Auto"/>
+            <!-- Extensión -->
+            <RowDefinition Height="Auto"/>
+            <!-- Teléfono -->
+            <RowDefinition Height="Auto"/>
+            <!-- Departamento -->
+            <RowDefinition Height="Auto"/>
+            <!-- Rol -->
+            <RowDefinition Height="*"/>
+            <!-- Botón y mensajes -->
+        </Grid.RowDefinitions>
+
+        <!-- Nombre -->
+        <StackPanel Grid.Row="0" Margin="0,5">
+            <Label Content="Nombre:"/>
+            <TextBox x:Name="NameTextBox"/>
+        </StackPanel>
+
+        <!-- Apellido -->
+        <StackPanel Grid.Row="1" Margin="0,5">
+            <Label Content="Apellido:"/>
+            <TextBox x:Name="SurnameTextBox"/>
+        </StackPanel>
+
+        <!-- Extensión -->
+        <StackPanel Grid.Row="2" Margin="0,5">
+            <Label Content="Extensión:"/>
+            <TextBox x:Name="ExtensionTextBox"/>
+        </StackPanel>
+
+        <!-- Teléfono -->
+        <StackPanel Grid.Row="3" Margin="0,5">
+            <Label Content="Teléfono de trabajo:"/>
+            <TextBox x:Name="PhoneTextBox"/>
+        </StackPanel>
+
+        <!-- Departamento -->
+        <StackPanel Grid.Row="4" Margin="0,5">
+            <Label Content="Departamento:"/>
+            <ComboBox x:Name="DeptComboBox"
+                      DisplayMemberPath="deptName"
+                      SelectedValuePath="DeptId"/>
+        </StackPanel>
+
+        <!-- Rol -->
+        <StackPanel Grid.Row="5" Margin="0,5">
+            <Label Content="Rol:"/>
+            <ComboBox x:Name="RoleComboBox"
+                      DisplayMemberPath="RoleName"
+                      SelectedValuePath="RoleId"/>
+        </StackPanel>
+
+        <!-- Botón Guardar y mensaje de error -->
+        <StackPanel Grid.Row="6" Margin="0,10" HorizontalAlignment="Right">
+            <TextBlock x:Name="ErrorText" Foreground="Red" Margin="0,0,0,5" Visibility="Collapsed"/>
+            <Button Content="Guardar" Width="90" Click="SaveButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
