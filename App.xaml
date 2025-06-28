@@ -1,9 +1,11 @@
 ﻿<Application x:Class="Steady_Management_App.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:Steady_Management_App"
-             StartupUri="MainWindow.xaml">
+             xmlns:conv="clr-namespace:Steady_Management_App.Views.Converters">
+
     <Application.Resources>
-         
+        <conv:NullToBoolConverter  x:Key="NullToBool"/>
+        <conv:InverseBoolConverter x:Key="InverseBool"/>
     </Application.Resources>
+
 </Application>
