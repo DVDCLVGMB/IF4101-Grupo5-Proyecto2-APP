@@ -39,18 +39,18 @@ namespace Steady_Management.WPF.Views
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            ErrorText.Visibility = Visibility.Collapsed;
+         
 
-            // Validar campos obligatorios
             if (string.IsNullOrWhiteSpace(NameTextBox.Text) ||
-                string.IsNullOrWhiteSpace(SurnameTextBox.Text) ||
-                string.IsNullOrWhiteSpace(ExtensionTextBox.Text) ||
-                string.IsNullOrWhiteSpace(PhoneTextBox.Text) ||
-                DeptComboBox.SelectedValue == null ||
-                RoleComboBox.SelectedValue == null)
+        string.IsNullOrWhiteSpace(SurnameTextBox.Text) ||
+        string.IsNullOrWhiteSpace(ExtensionTextBox.Text) ||
+        string.IsNullOrWhiteSpace(PhoneTextBox.Text) ||
+        DeptComboBox.SelectedValue == null ||
+        RoleComboBox.SelectedValue == null)
             {
-                ErrorText.Text = "Por favor, complete todos los campos.";
-                ErrorText.Visibility = Visibility.Visible;
+                var validationDialog = new ValidationDialog();
+                validationDialog.Owner = this;
+                validationDialog.ShowDialog();
                 return;
             }
 

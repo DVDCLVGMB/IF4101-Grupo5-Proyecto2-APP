@@ -57,14 +57,24 @@ namespace Steady_Management_App.Views
                 LoadEmployees();
         }
 
+
         private async void DeleteEmployee_Click(object sender, RoutedEventArgs e)
         {
             var employee = (Employee)((FrameworkElement)sender).DataContext;
-            if (MessageBox.Show("¿Desea eliminar este empleado?", "Confirmar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+
+            var confirmDialog = new DeleteConfirmationDialog();
+            confirmDialog.Owner = Window.GetWindow(this);
+            confirmDialog.ShowDialog();
+
+            if (confirmDialog.DeleteConfirmed)
             {
                 await _employeeService.DeleteEmployeeAsync(employee.EmployeeId);
                 LoadEmployees();
             }
+        }
+        private void EmployeesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
