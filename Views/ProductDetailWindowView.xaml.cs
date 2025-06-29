@@ -10,19 +10,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Steady_Management_App.Services;
+using Steady_Management_App.ViewModels;
 
 namespace Steady_Management_App.Views
 {
-    /// <summary>
-    /// Interaction logic for ProductListUCView.xaml
-    /// </summary>
-    public partial class ProductListUCView : UserControl
+    public partial class ProductDetailWindowView : Window
     {
-        public ProductListUCView()
+        public ProductDetailWindowView(int productId = 0)
         {
             InitializeComponent();
+            var vm = new ProductDetailViewModel(
+                new ProductService(),
+                new CategoryService(),
+                productId);
+            vm.RequestClose += () => this.Close();
+            this.DataContext = vm;
         }
     }
 }
+

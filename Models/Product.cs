@@ -12,6 +12,8 @@ namespace Steady_Management_App.Models
         private int _categoryId;
         private string _productName = string.Empty;
         private float _price;
+        private string _categoryName = string.Empty;
+        private string categoryName = string.Empty;
 
         #region Propiedades bindables
 
@@ -27,6 +29,11 @@ namespace Steady_Management_App.Models
             set => SetField(ref _categoryId, value);
         }
 
+        public string CategoryName
+        {
+            get => _categoryName;
+            set => SetField(ref _categoryName, value);
+        }
         public string ProductName
         {
             get => _productName;

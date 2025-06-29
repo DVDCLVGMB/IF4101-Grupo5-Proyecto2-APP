@@ -1,62 +1,70 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Steady_Management_App.DTOs;
+using Steady_Management_App.Models;
 using Steady_Management_App.Services;
 
 namespace Steady_Management_App.ViewModels
 {
     public class ProductDetailViewModel : BaseViewModel
     {
-        private readonly IProductService _svc;
-        private ProductDTO productDTO;
+        private readonly IProductService _productSvc;
+        private readonly ICategoryService _categorySvc;
 
-        /// <summary>
-        /// El DTO que se enlaza en la vista.
-        /// </summary>
+        private ProductDTO _product = new ProductDTO();
         public ProductDTO Product
         {
-            get => productDTO;
+            get => _product;
             private set
             {
-                productDTO = value;
+                _product = value;
                 Raise(nameof(Product));
             }
         }
 
-        /// <summary>
-        /// Se dispara cuando se va a cerrar el diálogo.
-        /// La vista debe suscribirse a este evento y cerrarse.
-        /// </summary>
-        public event Action? RequestClose;
-
-        /// <summary>
-        /// Se dispara después de guardar correctamente, 
-        /// con el DTO resultante (nuevo o actualizado).
-        /// </summary>
-        public event Action<ProductDTO>? ProductSaved;
+        public ObservableCollection<Category> Categories { get; }
+            = new ObservableCollection<Category>();
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
-        /// Si es mayor que cero, carga el producto existente; 
-        /// si es 0, prepara uno nuevo para crear.
-        public ProductDetailViewModel(IProductService svc, int productId = 0)
+        public event Action? RequestClose;
+        public event Action<ProductDTO>? ProductSaved;
+
+        public ProductDetailViewModel(
+            IProductService productSvc,
+            ICategoryService categorySvc,
+            int productId = 0)
         {
-            _svc = svc ?? throw new ArgumentNullException(nameof(svc));
+            _productSvc = productSvc ?? throw new ArgumentNullException(nameof(productSvc));
+            _categorySvc = categorySvc ?? throw new ArgumentNullException(nameof(categorySvc));
 
+            // Mantengo comandos siempre habilitados
             SaveCommand = new RelayCommand(async _ => await SaveAsync());
-            CancelCommand = new RelayCommand(_ => RequestClose?.Invoke());
+            CancelCommand = new RelayCommand(_ => OnCancel());
 
-            Product = new ProductDTO();
+            // Cargo categorías para el ComboBox
+            _ = LoadCategoriesAsync();
 
+            // Si viene un ID, cargo el producto; si no, dejo Product con valores por defecto
             if (productId > 0)
-                _ = LoadAsync(productId);
+                _ = LoadProductAsync(productId);
         }
 
-        private async Task LoadAsync(int id)
+        private async Task LoadCategoriesAsync()
         {
-            var dto = await _svc.GetByIdAsync(id);
+            var list = await _categorySvc.GetCategoriesAsync();
+            Categories.Clear();
+            foreach (var c in list)
+                Categories.Add(c);
+        }
+
+        private async Task LoadProductAsync(int id)
+        {
+            var dto = await _productSvc.GetProductByIdAsync(id);
             if (dto != null)
                 Product = dto;
         }
@@ -64,17 +72,20 @@ namespace Steady_Management_App.ViewModels
         private async Task SaveAsync()
         {
             ProductDTO? result;
-
             if (Product.ProductId == 0)
             {
                 // Crear
                 var createDto = new ProductCreateDto
                 {
-                    CategoryId = Product.CategoryId,
                     ProductName = Product.ProductName,
-                    Price = Product.Price
+                    Price = Product.Price,
+                    CategoryId = Product.CategoryId
                 };
-                result = await _svc.CreateAsync(createDto);
+                result = await _productSvc.AddProductAsync(
+                    createDto.ProductName,
+                    createDto.CategoryId,
+                    createDto.Price
+                );
             }
             else
             {
@@ -82,11 +93,19 @@ namespace Steady_Management_App.ViewModels
                 var updateDto = new ProductUpdateDto
                 {
                     ProductId = Product.ProductId,
-                    CategoryId = Product.CategoryId,
                     ProductName = Product.ProductName,
-                    Price = Product.Price
+                    Price = Product.Price,
+                    CategoryId = Product.CategoryId
                 };
-                result = await _svc.UpdateAsync(updateDto);
+                var ok = await _productSvc.UpdateProductAsync(
+                    new Models.Product
+                    {
+                        ProductId = updateDto.ProductId,
+                        ProductName = updateDto.ProductName,
+                        Price = updateDto.Price,
+                        CategoryId = updateDto.CategoryId
+                    });
+                result = ok ? Product : null;
             }
 
             if (result != null)
@@ -97,7 +116,6 @@ namespace Steady_Management_App.ViewModels
 
         private void OnCancel()
         {
-            // Simplemente cerramos sin guardar
             RequestClose?.Invoke();
         }
     }
