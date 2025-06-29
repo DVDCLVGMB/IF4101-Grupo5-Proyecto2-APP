@@ -1,10 +1,16 @@
-﻿using Steady_Management_App.DTOs;
+﻿using System.Threading.Tasks;
+using System.Collections.Generic;
+using Steady_Management_App.DTOs;
+using Steady_Management_App.Models;
 
-public interface IProductService
+namespace Steady_Management_App.Services
 {
-    Task<List<ProductDTO>> GetAllAsync();
-    Task<ProductDTO?> GetByIdAsync(int id);
-    Task<ProductDTO> CreateAsync(ProductCreateDto dto);
-    Task<ProductDTO?> UpdateAsync(ProductUpdateDto dto);
-    Task<bool> DeleteAsync(int id);
+    public interface IProductService
+    {
+        Task<List<Product>> GetProductsAsync();
+        Task<Product?> GetProductByIdAsync(int id);
+        Task<Product?> AddProductAsync(string name, int categoryId, float price);
+        Task<bool> UpdateProductAsync(Product p);
+        Task<bool> DeleteProductAsync(int id);
+    }
 }

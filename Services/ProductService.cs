@@ -8,7 +8,7 @@ using Steady_Management_App.DTOs;
 
 namespace Steady_Management_App.Services
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
         private static readonly HttpClient client = new HttpClient();
         // La URL base ahora se lee (idealmente) desde appsettings.json,
@@ -23,17 +23,17 @@ namespace Steady_Management_App.Services
                         "La URL base de la API no está configurada en appsettings.json.");
                 client.BaseAddress = new Uri(baseUrl);
                 // opcional: «calentar» la colección al arrancar
-                _ = client.GetFromJsonAsync<List<Product>>("api/products");
+                _ = client.GetFromJsonAsync<List<Product>>("api/product");
             }
         }
 
         // ------------------- READ ALL -------------------
-        /// <summary>GET: api/products</summary>
+        /// <summary>GET: api/product</summary>
         public async Task<List<Product>> GetProductsAsync()
         {
             try
             {
-                var list = await client.GetFromJsonAsync<List<Product>>("api/products");
+                var list = await client.GetFromJsonAsync<List<Product>>("api/product");
                 return list ?? new List<Product>();
             }
             catch (HttpRequestException ex)
@@ -44,12 +44,12 @@ namespace Steady_Management_App.Services
         }
 
         // ------------------- READ BY ID ------------------
-        /// <summary>GET: api/products/{id}</summary>
+        /// <summary>GET: api/product/{id}</summary>
         public async Task<Product?> GetProductByIdAsync(int id)
         {
             try
             {
-                return await client.GetFromJsonAsync<Product>($"api/products/{id}");
+                return await client.GetFromJsonAsync<Product>($"api/product/{id}");
             }
             catch (HttpRequestException ex)
             {
@@ -74,7 +74,7 @@ namespace Steady_Management_App.Services
 
             try
             {
-                var response = await client.PostAsJsonAsync("api/products", dto);
+                var response = await client.PostAsJsonAsync("api/product", dto);
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadFromJsonAsync<Product>();
             }
@@ -92,7 +92,7 @@ namespace Steady_Management_App.Services
             try
             {
                 var response = await client.PutAsJsonAsync(
-                    $"api/products/{p.ProductId}",
+                    $"api/product/{p.ProductId}",
                     p);
 
                 if (!response.IsSuccessStatusCode)
@@ -115,7 +115,7 @@ namespace Steady_Management_App.Services
         {
             try
             {
-                var response = await client.DeleteAsync($"api/products/{id}");
+                var response = await client.DeleteAsync($"api/product/{id}");
                 if (!response.IsSuccessStatusCode)
                     Console.WriteLine(
                         $"[ProductService] Error DELETE id={id}: {response.StatusCode}");
