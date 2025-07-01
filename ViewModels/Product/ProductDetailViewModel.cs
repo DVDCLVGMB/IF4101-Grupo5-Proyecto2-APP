@@ -84,7 +84,8 @@ namespace Steady_Management_App.ViewModels
                 result = await _productSvc.AddProductAsync(
                     createDto.ProductName,
                     createDto.CategoryId,
-                    createDto.Price
+                    createDto.Price,
+                    createDto.IsTaxable
                 );
             }
             else

@@ -9,7 +9,7 @@ namespace Steady_Management_App.Services
     {
         Task<List<Product>> GetProductsAsync();
         Task<Product?> GetProductByIdAsync(int id);
-        Task<Product?> AddProductAsync(string name, int categoryId, float price);
+        Task<Product?> AddProductAsync(string name, int categoryId, decimal price, bool isTaxable);
         Task<bool> UpdateProductAsync(Product p);
         Task<bool> DeleteProductAsync(int id);
     }

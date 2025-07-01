@@ -41,6 +41,8 @@
                 <DataGridTextColumn Header="Nombre"    Binding="{Binding ProductName}"  Width="*"/>
                 <DataGridTextColumn Header="Precio"    Binding="{Binding Price}"        Width="100"/>
                 <DataGridTextColumn Header="Categoría" Binding="{Binding CategoryName}" Width="200"/>
+                <DataGridTextColumn Header="¿Tiene impuestos?" Binding="{Binding IsTaxable}" Width="110"/>
+
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

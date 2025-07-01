@@ -63,13 +63,15 @@ namespace Steady_Management_App.Services
         public async Task<Product?> AddProductAsync(
             string productName,
             int categoryId,
-            float price)
+            decimal price,
+            bool isTaxable)
         {
             var dto = new ProductDTO
             {
                 ProductName = productName,
                 CategoryId = categoryId,
-                Price = price
+                Price = price, 
+                IsTaxable = isTaxable
             };
 
             try

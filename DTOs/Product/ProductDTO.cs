@@ -10,7 +10,9 @@ namespace Steady_Management_App.DTOs
 
         public int CategoryId { get; set; } = 0;
 
-        public float Price { get; set; } = 0f;
+        public decimal Price { get; set; } = 0;
+
+        public bool IsTaxable { get; set; }
 
         public static implicit operator ProductDTO(Steady_Management_App.Models.Product p)
         {
@@ -21,7 +23,8 @@ namespace Steady_Management_App.DTOs
                 ProductId = p.ProductId,
                 ProductName = p.ProductName,
                 CategoryId = p.CategoryId,
-                Price = p.Price
+                Price = p.Price,
+                IsTaxable = p.IsTaxable
             };
         }
     }

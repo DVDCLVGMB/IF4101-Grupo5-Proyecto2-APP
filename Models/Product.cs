@@ -11,9 +11,10 @@ namespace Steady_Management_App.Models
         private int _productId;
         private int _categoryId;
         private string _productName = string.Empty;
-        private float _price;
+        private decimal _price;
         private string _categoryName = string.Empty;
         private string categoryName = string.Empty;
+        private bool _isTaxable;
 
         #region Propiedades bindables
 
@@ -44,7 +45,7 @@ namespace Steady_Management_App.Models
             }
         }
 
-        public float Price
+        public decimal Price
         {
             get => _price;
             set
@@ -52,6 +53,12 @@ namespace Steady_Management_App.Models
                 if (SetField(ref _price, value))
                     ValidateProperty(value, nameof(Price));
             }
+        }
+
+        public bool IsTaxable
+        {
+            get => _isTaxable;
+            set => SetField(ref _isTaxable, value);
         }
 
         #endregion
