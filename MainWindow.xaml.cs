@@ -86,10 +86,6 @@ namespace PedidoApp
         {
             MessageBox.Show("Función Parámetros aún no implementada.");
         }
-        private void CerrarSesion_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Cerrar sesión (a implementar)");
-        }
 
         /*
         // ==== PEDIDOS ====
@@ -120,6 +116,21 @@ namespace PedidoApp
 
         */
 
+        private void CerrarSesion_Click(object sender, RoutedEventArgs e)
+        {
+            var login = new LoginWindow();
+            bool? ok = login.ShowDialog();
+            if (ok == true)
+            {
+                ConfigurarSegunRol();
+                ContenidoArea.Content = null;
+            }
+            else
+            {
+                Application.Current.Shutdown();
+            }
+        }
+    
         private void Salir_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
