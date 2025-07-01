@@ -1,69 +1,229 @@
 ﻿<Window x:Class="Steady_Management.WPF.Views.EmployeeForm"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Empleado" Height="480" Width="400">
-    <Grid Margin="15">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+        Title="Empleado"
+        Width="450"
+        Height="620"
+        WindowStartupLocation="CenterScreen"
+        Background="#f4f6f8"
+        FontFamily="Segoe UI"
+        FontSize="14">
+
+    <Window.Resources>
+        <!-- Estilo para TextBox modernos -->
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="BorderBrush" Value="#ccc"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border"
+                                CornerRadius="4"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#0078D7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Estilo para ComboBox -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#ccc"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <!-- Estilo mejorado para botón con efectos visuales -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#0078D7"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="8" Opacity="0.3" ShadowDepth="2" Color="#0078D7"/>
+                            </Border.Effect>
+                            <Grid>
+                                <ContentPresenter x:Name="contentPresenter" 
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"
+                                                  Opacity="1"/>
+                                <TextBlock x:Name="hoverEffect" 
+                                           Text="✓" 
+                                           FontSize="18"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"
+                                           Opacity="0"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0066B3"/>
+                                <Setter TargetName="contentPresenter" Property="Opacity" Value="0.8"/>
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#005999"/>
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.98" ScaleY="0.98"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="1" To="0" Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="hoverEffect"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="0" To="1" Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="hoverEffect"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="1" To="0" BeginTime="0:0:0.5" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetName="contentPresenter"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="0" To="1" BeginTime="0:0:0.8" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Margin" Value="0,20,0,0"/>
+        </Style>
+
+        <!-- Animación para mostrar errores -->
+        <Storyboard x:Key="ShowError">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0" To="1" Duration="0:0:0.3"/>
+        </Storyboard>
+
+        <!-- Estilo corregido para el título decorado -->
+        <Style x:Key="DecoratedTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2a2a2a"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextDecorations" Value="Underline"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#888" Direction="270" ShadowDepth="2" BlurRadius="4" Opacity="0.5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Border Margin="20" Padding="20" Background="White" CornerRadius="12">
+        <Border.Effect>
+            <DropShadowEffect Color="Black"
+                              Direction="270"
+                              ShadowDepth="4"
+                              Opacity="0.3"
+                              BlurRadius="10"/>
+        </Border.Effect>
+
+        <StackPanel>
+
+            <!-- Título decorado corregido -->
+            <StackPanel Margin="0,0,0,20" HorizontalAlignment="Center">
+                <TextBlock Text="FORMULARIO DE EMPLEADO"
+                           Style="{StaticResource DecoratedTitleStyle}"/>
+                <Border Height="3" Width="120" Background="#0078D7" Margin="0,-5,0,0" CornerRadius="2"/>
+                <Border Height="1" Width="80" Background="#0078D7" Margin="0,2,0,0" Opacity="0.5"/>
+            </StackPanel>
+
             <!-- Nombre -->
-            <RowDefinition Height="Auto"/>
+            <StackPanel Margin="0,5">
+                <TextBlock Text="Nombre" FontWeight="SemiBold"/>
+                <TextBox x:Name="NameTextBox"/>
+            </StackPanel>
+
             <!-- Apellido -->
-            <RowDefinition Height="Auto"/>
+            <StackPanel Margin="0,5">
+                <TextBlock Text="Apellido" FontWeight="SemiBold"/>
+                <TextBox x:Name="SurnameTextBox"/>
+            </StackPanel>
+
             <!-- Extensión -->
-            <RowDefinition Height="Auto"/>
+            <StackPanel Margin="0,5">
+                <TextBlock Text="Extensión" FontWeight="SemiBold"/>
+                <TextBox x:Name="ExtensionTextBox"/>
+            </StackPanel>
+
             <!-- Teléfono -->
-            <RowDefinition Height="Auto"/>
+            <StackPanel Margin="0,5">
+                <TextBlock Text="Teléfono de trabajo" FontWeight="SemiBold"/>
+                <TextBox x:Name="PhoneTextBox"/>
+            </StackPanel>
+
             <!-- Departamento -->
-            <RowDefinition Height="Auto"/>
+            <StackPanel Margin="0,5">
+                <TextBlock Text="Departamento" FontWeight="SemiBold"/>
+                <ComboBox x:Name="DeptComboBox"
+                          DisplayMemberPath="DeptName"
+                          SelectedValuePath="DeptId"/>
+            </StackPanel>
+
             <!-- Rol -->
-            <RowDefinition Height="*"/>
-            <!-- Botón y mensajes -->
-        </Grid.RowDefinitions>
+            <StackPanel Margin="0,5">
+                <TextBlock Text="Rol" FontWeight="SemiBold"/>
+                <ComboBox x:Name="RoleComboBox"
+                          DisplayMemberPath="RoleName"
+                          SelectedValuePath="RoleId"/>
+            </StackPanel>
 
-        <!-- Nombre -->
-        <StackPanel Grid.Row="0" Margin="0,5">
-            <Label Content="Nombre:"/>
-            <TextBox x:Name="NameTextBox"/>
-        </StackPanel>
+            <!-- Mensaje de error -->
+            <TextBlock x:Name="ErrorText"
+                       Text=""
+                       Foreground="Red"
+                       FontSize="13"
+                       Margin="0,10,0,0"
+                       Opacity="0"
+                       Visibility="Collapsed"/>
 
-        <!-- Apellido -->
-        <StackPanel Grid.Row="1" Margin="0,5">
-            <Label Content="Apellido:"/>
-            <TextBox x:Name="SurnameTextBox"/>
-        </StackPanel>
+            <!-- Botón Guardar mejorado -->
+            <Button Content="GUARDAR"
+                    Click="SaveButton_Click"
+                    Style="{StaticResource ModernButtonStyle}"/>
 
-        <!-- Extensión -->
-        <StackPanel Grid.Row="2" Margin="0,5">
-            <Label Content="Extensión:"/>
-            <TextBox x:Name="ExtensionTextBox"/>
         </StackPanel>
-
-        <!-- Teléfono -->
-        <StackPanel Grid.Row="3" Margin="0,5">
-            <Label Content="Teléfono de trabajo:"/>
-            <TextBox x:Name="PhoneTextBox"/>
-        </StackPanel>
-
-        <!-- Departamento -->
-        <StackPanel Grid.Row="4" Margin="0,5">
-            <Label Content="Departamento:"/>
-            <ComboBox x:Name="DeptComboBox"
-                      DisplayMemberPath="DeptName"
-                      SelectedValuePath="DeptId"/>
-        </StackPanel>
-
-        <!-- Rol -->
-        <StackPanel Grid.Row="5" Margin="0,5">
-            <Label Content="Rol:"/>
-            <ComboBox x:Name="RoleComboBox"
-                      DisplayMemberPath="RoleName"
-                      SelectedValuePath="RoleId"/>
-        </StackPanel>
-
-        <!-- Botón Guardar y mensaje de error -->
-        <StackPanel Grid.Row="6" Margin="0,10" HorizontalAlignment="Right">
-            <TextBlock x:Name="ErrorText" Foreground="Red" Margin="0,0,0,5" Visibility="Collapsed"/>
-            <Button Content="Guardar" Width="90" Click="SaveButton_Click"/>
-        </StackPanel>
-    </Grid>
+    </Border>
+    
+    
 </Window>
