@@ -9,11 +9,11 @@ namespace Steady_Management_App.Services
 {
     public class ClientApiService
     {
-        private static readonly HttpClient client = new();
-        private readonly string baseUrl = AppConfig.GetApiBaseUrl();
+        private static readonly HttpClient client = HttpClientProvider.Client;
+        //private readonly string baseUrl = AppConfig.GetApiBaseUrl();
 
         public ClientApiService()
-        {
+        {/*
             if (client.BaseAddress == null)
             {
                 if (string.IsNullOrEmpty(baseUrl))
@@ -22,7 +22,7 @@ namespace Steady_Management_App.Services
                 }
 
                 client.BaseAddress = new Uri(baseUrl);
-            }
+            }*/
         }
 
         public async Task<List<Client>> GetClientsAsync()
