@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="Steady_Management_App.Views.CityFormUcView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="Accent"     Color="#4F46E5"/>
+        <SolidColorBrush x:Key="PrimaryDark" Color="#1F2937"/>
+        <SolidColorBrush x:Key="HeaderText"  Color="White"/>
+
+        <Style x:Key="FormButton" TargetType="Button">
+            <Setter Property="Background"  Value="{StaticResource Accent}"/>
+            <Setter Property="Foreground"  Value="White"/>
+            <Setter Property="Padding"     Value="8,4"/>
+            <Setter Property="Margin"      Value="5"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Cursor"      Value="Hand"/>
+            <Setter Property="FontWeight"  Value="SemiBold"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="5">
+            <Label Content="Nombre de la Ciudad:"/>
+            <TextBox Text="{Binding SelectedCity.CityName, Mode=TwoWay}" Margin="0,0,0,10"/>
+
+            <Label Content="ID de Provincia:"/>
+            <TextBox Text="{Binding SelectedCity.Province, Mode=TwoWay}" Margin="0,0,0,10"/>
+
+            <Label Content="País:"/>
+            <TextBox Text="{Binding SelectedCity.Country, Mode=TwoWay}" Margin="0,0,0,10"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="5">
+            <Button Content="Guardar"
+        Click="OnSave_Click"
+        Style="{StaticResource FormButton}"
+        Margin="5"/>
+            <Button Content="Cancelar" Click="OnCancel_Click" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

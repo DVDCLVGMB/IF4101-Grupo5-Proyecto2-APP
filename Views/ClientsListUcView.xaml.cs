@@ -15,6 +15,10 @@ namespace Steady_Management_App
             InitializeComponent();
             DataContext = new ClientViewModel();
         }
+        public ClientsListUcView(ClientViewModel vm) : this()
+        {
+            DataContext = vm;
+        }
 
         private void Agregar_Click(object sender, RoutedEventArgs e)
         {

@@ -1,32 +1,32 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Steady_Management_App.ViewModels;  // para ClientViewModel
+using Steady_Management_App.Views;       // para ClientsListUcView
 
 namespace Steady_Management_App.Views
 {
     public partial class ClientFormUcView : UserControl
     {
-        public ClientFormUcView()
-        {
-            InitializeComponent();
-        }
+        // Exponemos el VM para poder reutilizarlo al cancelar
+        public ClientViewModel Vm { get; }
 
-        public ClientFormUcView(ViewModels.ClientViewModel viewModel)
+        // Sólo un constructor que reciba el VM
+        public ClientFormUcView(ClientViewModel viewModel)
         {
             InitializeComponent();
-            DataContext = viewModel;
+            DataContext = Vm = viewModel;
         }
 
         private void Cancelar_Click(object sender, RoutedEventArgs e)
         {
-            var mainWindow = Application.Current.Windows
+            var listView = new ClientsListUcView(Vm);
+            // Reemplazamos el contenido del MDI
+            Application.Current.Windows
                 .OfType<PedidoApp.MainWindow>()
-                .FirstOrDefault();
-
-            if (mainWindow != null)
-            {
-                mainWindow.ContenidoArea.Content = new ClientsListUcView();
-            }
+                .First()
+                .ContenidoArea
+                .Content = listView;
         }
     }
 }

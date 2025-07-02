@@ -7,47 +7,115 @@
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
 
- 
+    <!-- Recursos: pinceles y estilos -->
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PrimaryDark" Color="#1F2937"/>
+        <SolidColorBrush x:Key="HeaderText"   Color="White"/>
+        <SolidColorBrush x:Key="Accent"       Color="#4F46E5"/>
 
-    <Grid Margin="20">
+        <!-- Estilo para botones del formulario -->
+        <Style x:Key="FormButton" TargetType="Button">
+            <Setter Property="Background"   Value="{StaticResource Accent}"/>
+            <Setter Property="Foreground"   Value="White"/>
+            <Setter Property="Padding"      Value="8,4"/>
+            <Setter Property="Margin"       Value="5"/>
+            <Setter Property="BorderBrush"  Value="Transparent"/>
+            <Setter Property="Cursor"       Value="Hand"/>
+            <Setter Property="FontWeight"   Value="SemiBold"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Tres filas: encabezado, contenido y botones -->
         <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical" Grid.Row="0" Margin="10">
-            <Label Content="Nombre Empresa" />
-            <TextBox Margin="5" Text="{Binding SelectedClient.CompanyName, Mode=TwoWay}" />
+        <!-- Encabezado -->
+        <Border Background="{StaticResource PrimaryDark}" Grid.Row="0" Padding="10,0">
+            <TextBlock Text="Formulario de Cliente"
+                       Foreground="{StaticResource HeaderText}"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center"/>
+        </Border>
 
-            <Label Content="Nombre Contacto" />
-            <TextBox Margin="5" Text="{Binding SelectedClient.ContactName, Mode=TwoWay}" />
+        <!-- Campos en dos columnas -->
+        <ScrollViewer Grid.Row="1" Margin="10">
+            <UniformGrid Columns="2" Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <!-- Nombre de la Empresa (obligatorio) -->
+                <TextBlock Margin="5" VerticalAlignment="Center">
+                    <Run Text="Nombre de la Empresa"/>
+                    <Run Text=" *" Foreground="Red"/>
+                </TextBlock>
+                <TextBox Text="{Binding SelectedClient.CompanyName, Mode=TwoWay}" Margin="5"/>
 
-            <Label Content="Apellido Contacto" />
-            <TextBox Margin="5" Text="{Binding SelectedClient.ContactSurname, Mode=TwoWay}" />
+                <!-- Nombre del Contacto (obligatorio) -->
+                <TextBlock Margin="5" VerticalAlignment="Center">
+                    <Run Text="Nombre del Contacto"/>
+                    <Run Text=" *" Foreground="Red"/>
+                </TextBlock>
+                <TextBox Text="{Binding SelectedClient.ContactName, Mode=TwoWay}" Margin="5"/>
 
-            <Label Content="Puesto" />
-            <TextBox Margin="5" Text="{Binding SelectedClient.ContactRank, Mode=TwoWay}" />
+                <!-- Apellido del Contacto -->
+                <TextBlock Text="Apellido del Contacto" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding SelectedClient.ContactSurname, Mode=TwoWay}" Margin="5"/>
 
-            <Label Content="Teléfono" />
-            <TextBox Margin="5" Text="{Binding SelectedClient.ClientPhoneNumber, Mode=TwoWay}" />
+                <!-- Puesto del Contacto -->
+                <TextBlock Text="Puesto del Contacto" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding SelectedClient.ContactRank, Mode=TwoWay}" Margin="5"/>
 
-            <Label Content="Fax" />
-            <TextBox Margin="5" Text="{Binding SelectedClient.ClientFaxNumber, Mode=TwoWay}" />
+                <!-- Teléfono de Contacto (obligatorio) -->
+                <TextBlock Margin="5" VerticalAlignment="Center">
+                    <Run Text="Teléfono de Contacto"/>
+                    <Run Text=" *" Foreground="Red"/>
+                </TextBlock>
+                <TextBox Text="{Binding SelectedClient.ClientPhoneNumber, Mode=TwoWay}" Margin="5"/>
 
-            <Label Content="Dirección" />
-            <TextBox Margin="5" Text="{Binding SelectedClient.ClientAddress, Mode=TwoWay}" />
+                <!-- Número de Fax -->
+                <TextBlock Text="Número de Fax" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding SelectedClient.ClientFaxNumber, Mode=TwoWay}" Margin="5"/>
 
-            <Label Content="Código Postal" />
-            <TextBox Margin="5" Text="{Binding SelectedClient.ClientPostalCode, Mode=TwoWay}" />
- 
-            <TextBlock Text="ID Ciudad"/>
-            <TextBox Text="{Binding SelectedClient.CityId, UpdateSourceTrigger=PropertyChanged}" />
+                <!-- Dirección Completa -->
+                <TextBlock Text="Dirección Completa" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding SelectedClient.ClientAddress, Mode=TwoWay}" Margin="5"/>
 
-        </StackPanel>
+                <!-- Código Postal -->
+                <TextBlock Text="Código Postal" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding SelectedClient.ClientPostalCode, Mode=TwoWay}" Margin="5"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="5">
-            <Button Content="Guardar" Command="{Binding SaveClientCommand}" Margin="5"/>
-            <Button Content="Cancelar" Margin="5" Click="Cancelar_Click"/>
+                <!-- Ciudad (ComboBox) -->
+                <TextBlock Margin="5" VerticalAlignment="Center">
+    <Run Text="Ciudad"/>
+    <Run Text=" *" Foreground="Red"/>
+                </TextBlock>
+                <ComboBox Margin="5"
+          Width="200"
+          ItemsSource="{Binding Cities}"
+          DisplayMemberPath="CityName"
+          SelectedValuePath="CityId"
+          SelectedValue="{Binding SelectedClient.CityId, Mode=TwoWay}"/>
+
+                
+
+            </UniformGrid>
+        </ScrollViewer>
+        
+
+        <!-- Botones Guardar / Cancelar -->
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="2"
+                    HorizontalAlignment="Right"
+                    Margin="10">
+            <Button Content="Guardar"
+                    Command="{Binding SaveClientCommand}"
+                    Style="{StaticResource FormButton}"/>
+            <Button Content="Cancelar"
+                    Click="Cancelar_Click"
+                    Style="{StaticResource FormButton}"
+                    Background="Gray"/>
         </StackPanel>
     </Grid>
 </UserControl>

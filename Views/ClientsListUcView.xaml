@@ -36,6 +36,10 @@
                 <DataGridTextColumn Header="Teléfono" Binding="{Binding ClientPhoneNumber}" Width="*"/>
                 <DataGridTextColumn Header="Dirección" Binding="{Binding ClientAddress}" Width="*"/>
             </DataGrid.Columns>
+            
+            
         </DataGrid>
+        
+        
     </Grid>
 </UserControl>

@@ -1,9 +1,11 @@
 ﻿using System.Windows;
 using PedidoApp;
-using Steady_Management_App.Views;    // para LoginWindow
+using Steady_Management_App.Views;    
 
 namespace Steady_Management_App
 {
+
+
     public partial class App : Application
     {
         public App()
@@ -35,4 +37,6 @@ namespace Steady_Management_App
             main.Show();
         }
     }
+
+
 }

@@ -1,19 +1,22 @@
-﻿// ClientViewModel.cs (actualizado para manejar Guardar y Eliminar)
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Steady_Management.WPF.Views;
 using Steady_Management_App.Models;
 using Steady_Management_App.Services;
+using Steady_Management_App.Views;    
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows;                  
 
 namespace Steady_Management_App.ViewModels
 {
     public class ClientViewModel : ObservableObject
     {
         private readonly ClientApiService _apiService;
+        private readonly CityApiService _citySvc;
 
-        public ObservableCollection<Client> Clients { get; set; } = new();
-
+        public ObservableCollection<Client> Clients { get; } = new();
+        public ObservableCollection<City> Cities { get; } = new();
         private Client _selectedClient;
         public Client SelectedClient
         {
@@ -26,10 +29,21 @@ namespace Steady_Management_App.ViewModels
 
         public ClientViewModel()
         {
+            _citySvc = new CityApiService();
             _apiService = new ClientApiService();
             SaveClientCommand = new AsyncRelayCommand(SaveClientAsync);
             DeleteClientCommand = new AsyncRelayCommand(DeleteClientAsync);
             _ = LoadClientsAsync();
+            _ = LoadCitiesAsync();
+           
+        }
+
+        private async Task LoadCitiesAsync()
+        {
+            var list = await _citySvc.GetCitiesAsync();
+            Cities.Clear();
+            foreach (var c in list)
+                Cities.Add(c);
         }
 
         public async Task LoadClientsAsync()
@@ -44,7 +58,7 @@ namespace Steady_Management_App.ViewModels
         {
             SelectedClient = new Client
             {
-                CityId = 1,                      // ← Asegúrate que este ID exista en la tabla City
+                CityId = 1,
                 CompanyName = "",
                 ContactName = "",
                 ContactSurname = "",
@@ -55,7 +69,6 @@ namespace Steady_Management_App.ViewModels
                 ClientPostalCode = ""
             };
         }
-
 
         public void PrepareEditClient(Client client)
         {
@@ -76,16 +89,29 @@ namespace Steady_Management_App.ViewModels
 
         private async Task SaveClientAsync()
         {
-            if (SelectedClient == null) return;
+            if (SelectedClient == null)
+                return;
 
+            // —— Validaciones de campos obligatorios ——
+            if (string.IsNullOrWhiteSpace(SelectedClient.CompanyName) ||
+                string.IsNullOrWhiteSpace(SelectedClient.ContactName) ||
+                string.IsNullOrWhiteSpace(SelectedClient.ClientPhoneNumber) ||
+                SelectedClient.CityId <= 0)
+            {
+                // Lanzar tu ventana de validación
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var dlg = new ValidationDialog();
+                    dlg.ShowDialog();
+                });
+                return;
+            }
+
+            // —— Lógica normal de guardado ——
             if (SelectedClient.ClientId > 0)
-            {
                 await _apiService.UpdateClientAsync(SelectedClient);
-            }
             else
-            {
                 await _apiService.AddClientAsync(SelectedClient);
-            }
 
             await LoadClientsAsync();
             SelectedClient = null;
@@ -93,7 +119,8 @@ namespace Steady_Management_App.ViewModels
 
         private async Task DeleteClientAsync()
         {
-            if (SelectedClient == null) return;
+            if (SelectedClient == null)
+                return;
 
             await _apiService.DeleteClientAsync(SelectedClient.ClientId);
             await LoadClientsAsync();

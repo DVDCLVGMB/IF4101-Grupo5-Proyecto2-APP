@@ -55,16 +55,12 @@ namespace PedidoApp
 
         private void AbrirProductos(object sender, RoutedEventArgs e)
             => ContenidoArea.Content = new ProductListUCView();
-        
-
-        private void AbrirClientesForm()
-        {
-            ContenidoArea.Content = new Steady_Management_App.Views.ClientFormUcView();
-        }
 
 
 
-         
+
+
+
 
         private void AbrirPedido(object sender, RoutedEventArgs e)
         {
@@ -115,6 +111,13 @@ namespace PedidoApp
         }
 
         */
+
+        private void AbrirCiudades(object sender, RoutedEventArgs e)
+        {
+            // Carga el UserControl de Ciudades en el ContentControl
+            ContenidoArea.Content = new CitiesListUcView();
+        }
+
 
         private void CerrarSesion_Click(object sender, RoutedEventArgs e)
         {
