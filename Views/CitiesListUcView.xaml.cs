@@ -13,7 +13,24 @@ namespace Steady_Management_App.Views
         public CitiesListUcView()
         {
             InitializeComponent();
+           // AplicarRestriccionesPorRol();
         }
+
+        /*private void AplicarRestriccionesPorRol()
+        {
+            string rol = Application.Current.Properties["UserRole"]?.ToString() ?? "Invitado";
+            MessageBox.Show("ROL ACTUAL: " + rol); // <-- Para verificar
+
+            int.TryParse(rol, out int roleId);
+
+            if (roleId == 21) // Empleado
+            {
+                if (NuevoButton != null) NuevoButton.Visibility = Visibility.Collapsed;
+                if (EditarButton != null) EditarButton.Visibility = Visibility.Collapsed;
+            }
+        }
+        */
+
 
         public CitiesListUcView(CityViewModel vm) : this()
         {

@@ -69,11 +69,24 @@ namespace Steady_Management_App.ViewModels
 
                 await _authService.LoginAsync(loginDto);
 
-                MessageBox.Show($"Bienvenido {_user.Username}", "Login exitoso",
+                var currentUser = _authService.CurrentUser;
+
+                //  Validación por si acaso
+                if (currentUser == null)
+                    throw new Exception("No se pudo obtener el usuario desde el servidor.");
+
+                // Guardar en propiedades globales de la app
+                Application.Current.Properties["UserName"] = currentUser.Username;
+                Application.Current.Properties["UserRole"] = currentUser.RoleId;  // O usar .Role si es string
+
+                MessageBox.Show($"Bienvenido {currentUser.Username}", "Login exitoso",
                     MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Cerrar la ventana de login
-                CloseLogin?.Invoke();
+                Application.Current.Properties["UserRole"] = _user.RoleId.ToString(); // ← IMPORTANTE
+                Application.Current.Properties["UserName"] = _user.Username;
+
+
+                CloseLogin?.Invoke(); // Cierra la ventana de login
 
             }
             catch (Exception ex)

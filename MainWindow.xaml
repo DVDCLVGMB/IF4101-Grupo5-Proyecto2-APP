@@ -7,25 +7,24 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <Style x:Key="SubmenuStyle" TargetType="MenuItem">
-            <Setter Property="Background" Value="#2D3748"/>
-            <!-- Fondo oscuro -->
-            <Setter Property="Foreground" Value="White"/>
-            <!-- Texto gris claro -->
-            <Setter Property="Padding" Value="12,6"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#4A5568"/>
-                    <!-- Hover -->
-                    <Setter Property="Foreground" Value="#E0E0E0"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
+        <!-- Colores -->
         <SolidColorBrush x:Key="PrimaryDark"     Color="#1F2937"/>
         <SolidColorBrush x:Key="AccentBrush"     Color="#4F46E5"/>
         <SolidColorBrush x:Key="HeaderTextBrush" Color="White"/>
         <SolidColorBrush x:Key="HoverGray"       Color="#e0e5eb"/>
+
+        <!-- Submenús (estilo de ítems hijos) -->
+        <Style x:Key="SubmenuStyle" TargetType="MenuItem">
+            <Setter Property="Background" Value="#2D3748"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4A5568"/>
+                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <!-- Menú principal -->
         <Style TargetType="Menu">
@@ -34,6 +33,8 @@
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="14"/>
         </Style>
+
+        <!-- Ítems del menú principal -->
         <Style TargetType="MenuItem">
             <Setter Property="Padding" Value="12,6"/>
             <Setter Property="Background" Value="Transparent"/>
@@ -56,7 +57,7 @@
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
 
-        <!-- Botones de toolbar/Iconos -->
+        <!-- Botones de barra -->
         <Style x:Key="ToolbarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
@@ -66,10 +67,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                    CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                VerticalAlignment="Center"/>
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -81,63 +80,64 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Botones de menú principal y acciones -->
+        <!-- Botones principales -->
         <Style TargetType="Button" x:Key="MainButton" BasedOn="{StaticResource ToolbarButton}">
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontSize" Value="12"/>
         </Style>
-
     </Window.Resources>
 
     <DockPanel>
 
         <!-- MENÚ PRINCIPAL -->
-        <Menu DockPanel.Dock="Top" Background="#1b2838" Height="43">
-            
+        <Menu DockPanel.Dock="Top" Height="43">
             <MenuItem Header="Archivo">
                 <MenuItem.Resources>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}"/>
                 </MenuItem.Resources>
                 <MenuItem Header="Cerrar sesión" Click="CerrarSesion_Click"/>
-                <Separator />
+                <Separator/>
                 <MenuItem Header="Salir" Click="Salir_Click"/>
             </MenuItem>
+
             <MenuItem Header="Gestión" x:Name="MantenimientoMenu">
                 <MenuItem.Resources>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}"/>
                 </MenuItem.Resources>
                 <MenuItem Header="Clientes" Click="AbrirClientes"/>
                 <MenuItem Header="Productos" Click="AbrirProductos"/>
                 <MenuItem Header="Empleados" Click="AbrirEmpleados"/>
                 <MenuItem Header="Departamentos" Click="AbrirDepartamentos"/>
-                <MenuItem Header="Ciudades"    Click="AbrirCiudades"/>
-
+                <MenuItem Header="Ciudades" Click="AbrirCiudades"/>
             </MenuItem>
+
             <MenuItem Header="Pedidos" x:Name="PedidosMenu">
                 <MenuItem.Resources>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}"/>
                 </MenuItem.Resources>
                 <MenuItem Header="Realizar Pedido" Click="AbrirPedido"/>
             </MenuItem>
+
             <MenuItem Header="Reportes" x:Name="ReportesMenu">
                 <MenuItem.Resources>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}"/>
                 </MenuItem.Resources>
                 <MenuItem Header="Ventas" Click="AbrirReporteVentas"/>
                 <MenuItem Header="Clientes" Click="AbrirReporteClientes"/>
                 <MenuItem Header="Productos" Click="AbrirReporteProductos"/>
             </MenuItem>
+
             <MenuItem Header="Parámetros" x:Name="ParametrosMenu">
                 <MenuItem.Resources>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}"/>
                 </MenuItem.Resources>
                 <MenuItem Header="Configuración General" Click="AbrirParametros"/>
             </MenuItem>
         </Menu>
 
-        <!-- ENCABEZADO VISUAL -->
+        <!-- ENCABEZADO -->
         <DockPanel DockPanel.Dock="Top" Background="White" Margin="0,0,0,5">
-            <TextBlock Text="Sistema de Pedidos "
+            <TextBlock Text="Sistema de Pedidos"
                        FontSize="20"
                        FontWeight="Bold"
                        Foreground="#333"
@@ -146,32 +146,31 @@
 
         <!-- BARRA DE HERRAMIENTAS -->
         <ToolBar DockPanel.Dock="Top" Height="60">
-            <Button ToolTip="Nuevo Pedido" Click="AbrirPedido">
+            <Button x:Name="btnNuevoPedido" ToolTip="Nuevo Pedido">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
                     <TextBlock Text="Nuevo Pedido" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button ToolTip="Clientes" Click="AbrirClientes">
+            <Button x:Name="btnClientes" ToolTip="Clientes" Click="AbrirClientes">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
                     <TextBlock Text="Clientes" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button ToolTip="Inventario" Click="AbrirProductos">
+            <Button x:Name="btnInventario" ToolTip="Inventario" Click="AbrirProductos">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
                     <TextBlock Text="Inventario" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button ToolTip="Ciudades" Click="AbrirCiudades">
-               
+            <Button x:Name="btnCiudades" ToolTip="Ciudades" Click="AbrirCiudades">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
                     <TextBlock Text="Ciudades" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
-            <Button ToolTip="Reportes" Click="AbrirReporteVentas">
+            <Button x:Name="btnReportes" ToolTip="Reportes" Click="AbrirReporteVentas">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
                     <TextBlock Text="Reportes" FontSize="11" HorizontalAlignment="Center"/>
@@ -179,7 +178,7 @@
             </Button>
         </ToolBar>
 
-        <!-- VENTANA MDI CENTRAL -->
+        <!-- ÁREA MDI CENTRAL -->
         <Border Margin="10" Padding="10" Background="White" CornerRadius="8" BorderBrush="#ccc" BorderThickness="1">
             <ContentControl x:Name="ContenidoArea"
                             Background="White"
@@ -187,12 +186,12 @@
                             VerticalAlignment="Stretch"/>
         </Border>
 
-        <!--BARRA DE ESTADO 
+        <!-- BARRA DE ESTADO 
         <StatusBar DockPanel.Dock="Bottom" Background="#f5f5f5">
             <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock x:Name="UsuarioLabel" Text="Usuario: Desconocido - Rol: Invitado" />
             </StatusBarItem>
         </StatusBar>
-           -->
+        -->
     </DockPanel>
 </Window>

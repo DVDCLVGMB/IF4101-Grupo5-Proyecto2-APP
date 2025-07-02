@@ -8,9 +8,9 @@
 
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="10">
-            <Button Content="Nuevo" Click="OnNuevo_Click" Margin="5"/>
-            <Button Content="Editar" Click="OnEditar_Click" Margin="5"/>
-            <Button Content="Eliminar" Command="{Binding DeleteCityCommand}" Margin="5"/>
+            <Button x:Name="NuevoButton"  Content="Nuevo" Click="OnNuevo_Click" Margin="5"/>
+            <Button x:Name="EditarButton" Content="Editar" Click="OnEditar_Click" Margin="5"/>
+            <Button x:Name="eLIMINARButton" Content="Eliminar" Command="{Binding DeleteCityCommand}" Margin="5"/>
         </StackPanel>
 
         <DataGrid ItemsSource="{Binding Cities}"

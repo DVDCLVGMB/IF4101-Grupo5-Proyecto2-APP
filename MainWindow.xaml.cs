@@ -11,6 +11,11 @@ namespace PedidoApp
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += MainWindow_Loaded; // Esperar a que cargue para configurar
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
             ConfigurarSegunRol();
         }
 
@@ -20,30 +25,34 @@ namespace PedidoApp
             string usuario = App.Current.Properties["UserName"]?.ToString() ?? "Desconocido";
 
             //UsuarioLabel.Text = $"Usuario: {usuario} - Rol: {rol}";
+            int.TryParse(rol, out int roleId);
 
-            // Personaliza visibilidad de menús según rol
-            if (rol == "Vendedor")
+            // Rol 21: Empleado
+            if (roleId == 21)
             {
+                // Ocultar menús
                 MantenimientoMenu.Visibility = Visibility.Collapsed;
                 ReportesMenu.Visibility = Visibility.Collapsed;
                 ParametrosMenu.Visibility = Visibility.Collapsed;
+
+                // Ocultar botones de la barra
+                btnClientes.Visibility = Visibility.Collapsed;
+                btnInventario.Visibility = Visibility.Collapsed;
+                btnCiudades.Visibility = Visibility.Collapsed;
+                btnReportes.Visibility = Visibility.Collapsed;
             }
         }
 
-        // ==== CRUDs ====
+
+        // ===================== CRUDs =====================
         private void AbrirClientes(object sender, RoutedEventArgs e)
             => ContenidoArea.Content = new ClientsListUcView();
 
-        // private void AbrirProductos(object sender, RoutedEventArgs e)
-        //   => ContenidoArea.Content = new ProductosView();
-
-
-
+        private void AbrirProductos(object sender, RoutedEventArgs e)
+            => ContenidoArea.Content = new ProductListUCView();
 
         private void AbrirEmpleados(object sender, RoutedEventArgs e)
             => ContenidoArea.Content = new EmployeesListUcView();
-
-
 
         private void AbrirDepartamentos(object sender, RoutedEventArgs e)
         {
@@ -53,70 +62,33 @@ namespace PedidoApp
             };
         }
 
-        private void AbrirProductos(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new ProductListUCView();
-
-
-
-
-
-
+        private void AbrirCiudades(object sender, RoutedEventArgs e)
+            => ContenidoArea.Content = new CitiesListUcView();
 
         private void AbrirPedido(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Función Pedido aún no implementada.");
         }
+
         private void AbrirReporteVentas(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Función Reporte Ventas aún no implementada.");
         }
+
         private void AbrirReporteClientes(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Función Reporte Clientes aún no implementada.");
         }
+
         private void AbrirReporteProductos(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Función Reporte Productos aún no implementada.");
         }
+
         private void AbrirParametros(object sender, RoutedEventArgs e)
-                => ContenidoArea.Content = new ParameterUcView();
+            => ContenidoArea.Content = new ParameterUcView();
 
-        /*
-        // ==== PEDIDOS ====
-        private void AbrirPedido(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new PedidoView();
-
-        // ==== REPORTES ====
-        private void AbrirReporteVentas(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new ReporteVentasView();
-
-        private void AbrirReporteClientes(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new ReporteClientesView();
-
-        private void AbrirReporteProductos(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new ReporteProductosView();
-
-        //  PARÁMETROS 
-        private void AbrirParametros(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new ParametrosView();
-
-        //  SESIÓN 
-        private void CerrarSesion_Click(object sender, RoutedEventArgs e)
-        {
-            var loginWindow = new LoginWindow();
-            loginWindow.Show();
-            this.Close();
-        }
-
-        */
-
-        private void AbrirCiudades(object sender, RoutedEventArgs e)
-        {
-            // Carga el UserControl de Ciudades en el ContentControl
-            ContenidoArea.Content = new CitiesListUcView();
-        }
-
-
+        // ===================== SESIÓN =====================
         private void CerrarSesion_Click(object sender, RoutedEventArgs e)
         {
             var login = new LoginWindow();
@@ -131,7 +103,7 @@ namespace PedidoApp
                 Application.Current.Shutdown();
             }
         }
-    
+
         private void Salir_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
