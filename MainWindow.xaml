@@ -144,7 +144,6 @@
                        Foreground="#333"
                        Padding="15,10"/>
         </DockPanel>
-
         <!-- BARRA DE HERRAMIENTAS -->
         <ToolBar DockPanel.Dock="Top" Height="60">
             <Button x:Name="btnNuevoPedido" ToolTip="Nuevo Pedido">
@@ -153,24 +152,28 @@
                     <TextBlock Text="Nuevo Pedido" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
+
             <Button x:Name="btnClientes" ToolTip="Clientes" Click="AbrirClientes">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
                     <TextBlock Text="Clientes" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
+
             <Button x:Name="btnInventario" ToolTip="Inventario" Click="AbrirProductos">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
                     <TextBlock Text="Inventario" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
+
             <Button x:Name="btnCiudades" ToolTip="Ciudades" Click="AbrirCiudades">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
                     <TextBlock Text="Ciudades" FontSize="11" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Button>
+
             <Button x:Name="btnReportes" ToolTip="Reportes" Click="AbrirReporteVentas">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
@@ -178,6 +181,7 @@
                 </StackPanel>
             </Button>
         </ToolBar>
+
 
         <!-- ÁREA MDI CENTRAL -->
         <Border Margin="10" Padding="10" Background="White" CornerRadius="8" BorderBrush="#ccc" BorderThickness="1">

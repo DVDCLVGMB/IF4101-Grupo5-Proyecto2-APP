@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Steady_Management_App.DTOs;
+using Steady_Management_App.Models;
+using Steady_Management_App.Models.Steady_Management_App.Models;
+using Steady_Management_App.Services;
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Steady_Management_App.DTOs;
-using Steady_Management_App.Models;
-using Steady_Management_App.Services;
 
 namespace Steady_Management_App.ViewModels
 {
@@ -75,16 +76,15 @@ namespace Steady_Management_App.ViewModels
                 if (currentUser == null)
                     throw new Exception("No se pudo obtener el usuario desde el servidor.");
 
-                // Guardar en propiedades globales de la app
-                Application.Current.Properties["UserName"] = currentUser.Username;
-                Application.Current.Properties["UserRole"] = currentUser.RoleId;  // O usar .Role si es string
+                UserSession.UserId = currentUser.UserId;
+                UserSession.Username = currentUser.Username;
+                UserSession.RoleId = currentUser.RoleId;
+
 
                 MessageBox.Show($"Bienvenido {currentUser.Username}", "Login exitoso",
                     MessageBoxButton.OK, MessageBoxImage.Information);
 
-                Application.Current.Properties["UserRole"] = _user.RoleId.ToString(); // ← IMPORTANTE
-                Application.Current.Properties["UserName"] = _user.Username;
-
+               
 
                 CloseLogin?.Invoke(); // Cierra la ventana de login
 

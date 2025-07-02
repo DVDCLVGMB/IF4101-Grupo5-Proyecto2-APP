@@ -85,13 +85,14 @@
                 </Label>
             </Grid>
 
-            <Button Content="Agregar"
-                    Command="{Binding AddCommand}"
-                    Background="#1b2838"
-                    Foreground="White"
-                    Padding="15,5"
-                    FontSize="13"
-                    FontWeight="SemiBold"/>
+            <Button x:Name="AgregarButton"
+        Content="Agregar"
+        Command="{Binding AddCommand}"
+        Background="#1b2838"
+        Foreground="White"
+        Padding="15,5"
+        FontSize="13"
+        FontWeight="SemiBold"/>
         </DockPanel>
 
         <!-- Tabla de departamentos centrada -->
@@ -132,16 +133,23 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Style="{StaticResource ModernIconButton}" ToolTip="Editar"
-                                                Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding}" Margin="0,0,5,0">
+                                        <Button x:Name="EditarButton"
+        Style="{StaticResource ModernIconButton}"
+        ToolTip="Editar"
+        Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+        CommandParameter="{Binding}" Margin="0,0,5,0">
                                             <TextBlock Text="&#xE70F;" />
                                         </Button>
-                                        <Button Style="{StaticResource ModernIconButton}" ToolTip="Eliminar"
+
+                                        <Button x:Name="EliminarButton"
+        Style="{StaticResource ModernIconButton}"
+        ToolTip="Eliminar"
         Click="DeleteDepartment_Click"
         Tag="{Binding}">
                                             <TextBlock Text="&#xE74D;" />
                                         </Button>
+
+
 
                                     </StackPanel>
                                 </DataTemplate>

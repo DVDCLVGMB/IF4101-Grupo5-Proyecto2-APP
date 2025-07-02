@@ -1,5 +1,6 @@
-﻿using System.Windows;
-using Steady_Management_App.Models;
+﻿using Steady_Management_App.Models;
+using Steady_Management_App.Models.Steady_Management_App.Models;
+using System.Windows;
 
 namespace Steady_Management_App.Views
 {
@@ -9,7 +10,22 @@ namespace Steady_Management_App.Views
         {
             InitializeComponent();
             DataContext = dept;   // el ViewModel ya pasa la instancia
+            AplicarRestriccionesPorRol();
         }
+
+
+        private void AplicarRestriccionesPorRol()
+        {
+            int roleId = UserSession.RoleId;
+
+            if (roleId == 21)
+            {
+                AgregarButton.Visibility = Visibility.Collapsed;
+                EditarButton.Visibility = Visibility.Collapsed;
+            }
+        }
+
+
 
         private void Guardar_Click(object sender, RoutedEventArgs e)
         {

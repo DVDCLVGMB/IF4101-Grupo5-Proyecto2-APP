@@ -108,7 +108,7 @@
                             <TextBlock Text="Gestión de Clientes" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <Button Content="Agregar Cliente" Style="{StaticResource ModernButton}"
+                        <Button x:Name="AgregarButton" Content="Agregar Cliente" Style="{StaticResource ModernButton}"
                                 Click="Agregar_Click" HorizontalAlignment="Right">
                             <Button.ContentTemplate>
                                 <DataTemplate>
@@ -143,7 +143,7 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Button Style="{StaticResource ModernIconButton}" ToolTip="Editar"
+                                            <Button x:Name="EditarButton" Style="{StaticResource ModernIconButton}" ToolTip="Editar"
                                                     Click="Editar_Click" Tag="{Binding}" Margin="0,0,5,0">
                                                 <TextBlock Text="&#xE70F;"/>
                                             </Button>

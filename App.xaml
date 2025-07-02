@@ -27,6 +27,8 @@
 
             <conv:NullToBoolConverter   x:Key="NullToBool"/>
             <conv:InverseBoolConverter  x:Key="InverseBool"/>
+            <conv:RoleToDeleteVisibilityConverter x:Key="RoleToDeleteVisibilityConverter" />
+
 
 
         </ResourceDictionary>

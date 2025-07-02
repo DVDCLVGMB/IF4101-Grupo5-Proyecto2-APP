@@ -1,5 +1,6 @@
 ﻿using PedidoApp;
 using Steady_Management_App.Models;
+using Steady_Management_App.Models.Steady_Management_App.Models;
 using Steady_Management_App.ViewModels;
 using System.Linq;
 using System.Windows;
@@ -13,23 +14,26 @@ namespace Steady_Management_App.Views
         public CitiesListUcView()
         {
             InitializeComponent();
-           // AplicarRestriccionesPorRol();
+           AplicarRestriccionesPorRol();
         }
 
-        /*private void AplicarRestriccionesPorRol()
+        private void AplicarRestriccionesPorRol()
         {
-            string rol = Application.Current.Properties["UserRole"]?.ToString() ?? "Invitado";
-            MessageBox.Show("ROL ACTUAL: " + rol); // <-- Para verificar
-
-            int.TryParse(rol, out int roleId);
+            int roleId = UserSession.RoleId;
 
             if (roleId == 21) // Empleado
             {
-                if (NuevoButton != null) NuevoButton.Visibility = Visibility.Collapsed;
-                if (EditarButton != null) EditarButton.Visibility = Visibility.Collapsed;
+                NuevoButton.Visibility = Visibility.Collapsed;
+                EditarButton.Visibility = Visibility.Collapsed;
+                EliminarButton.Visibility = Visibility.Collapsed;
             }
+            else if (roleId == 20)
+            {
+                EliminarButton.Visibility = Visibility.Collapsed;
+            }
+            // Admin (1) ve todo
         }
-        */
+
 
 
         public CitiesListUcView(CityViewModel vm) : this()

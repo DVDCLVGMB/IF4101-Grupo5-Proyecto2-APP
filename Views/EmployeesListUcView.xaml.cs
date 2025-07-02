@@ -13,10 +13,27 @@ namespace Steady_Management_App.Views
         private readonly DepartmentService _departmentService = new();
         private readonly RoleService _roleService = new();
 
+      
         public EmployeesListUcView()
         {
             InitializeComponent();
+            AplicarRestriccionesPorRol();
             LoadEmployees();
+        }
+
+        private void AplicarRestriccionesPorRol()
+        {
+            string rol = Application.Current.Properties["UserRole"]?.ToString() ?? "Invitado";
+            int.TryParse(rol, out int roleId);
+
+            if (roleId == 21) // Rol Empleado
+            {
+                var botonAgregar = this.FindName("BotonAgregarEmpleado") as Button;
+                if (botonAgregar != null)
+                {
+                    botonAgregar.Visibility = Visibility.Collapsed;
+                }
+            }
         }
 
         public async void LoadEmployees()

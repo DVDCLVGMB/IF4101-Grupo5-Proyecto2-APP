@@ -109,7 +109,7 @@
                             <TextBlock Text="Gestión de Productos" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <Button Content="Agregar Producto" Style="{StaticResource ModernButton}" Click="AddProduct_Click"
+                        <Button x:Name="AgregarProductoButton" Content="Agregar Producto" Style="{StaticResource ModernButton}" Click="AddProduct_Click"
                                 HorizontalAlignment="Right">
                             <Button.ContentTemplate>
                                 <DataTemplate>
@@ -149,9 +149,11 @@
                                                 <TextBlock Text="&#xE70F;"/>
                                             </Button>
                                             <Button Style="{StaticResource ModernIconButton}" ToolTip="Eliminar"
-                                                    Click="DeleteProduct_Click" Tag="{Binding}">
+        Click="DeleteProduct_Click" Tag="{Binding}"
+        Visibility="{Binding Source={x:Static Application.Current}, Path=Properties[UserRole], Converter={StaticResource RoleToDeleteVisibilityConverter}}">
                                                 <TextBlock Text="&#xE74D;"/>
                                             </Button>
+
                                         </StackPanel>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>

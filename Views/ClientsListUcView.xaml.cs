@@ -1,8 +1,10 @@
 ﻿using PedidoApp;
 using Steady_Management.WPF.Views;
 using Steady_Management_App.Models;
+using Steady_Management_App.Models.Steady_Management_App.Models;
 using Steady_Management_App.ViewModels;
 using Steady_Management_App.Views;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -16,11 +18,40 @@ namespace Steady_Management_App
         {
             InitializeComponent();
             DataContext = new ClientViewModel();
+            Loaded += ClientsListUcView_Loaded;
         }
+
         public ClientsListUcView(ClientViewModel vm) : this()
         {
             DataContext = vm;
         }
+
+        private void ClientsListUcView_Loaded(object sender, RoutedEventArgs e)
+        {
+            AplicarRestriccionesPorRol();
+        }
+        private void AplicarRestriccionesPorRol()
+        {
+            int roleId = UserSession.RoleId;
+
+            if (roleId == 21) // Empleado
+            {
+                AgregarButton.Visibility = Visibility.Collapsed;
+
+                // Ocultar columna "Acciones" manualmente
+                // Removiendo la columna al cargar
+                var gridView = ClientsListView.View as GridView;
+                if (gridView != null && gridView.Columns.Count > 0)
+                {
+                    // Asumiendo que la columna "Acciones" es la última
+                    gridView.Columns.RemoveAt(gridView.Columns.Count - 1);
+                }
+            }
+        }
+
+     
+ 
+
 
         private void Agregar_Click(object sender, RoutedEventArgs e)
         {
@@ -36,7 +67,6 @@ namespace Steady_Management_App
                 mainWindow.ContenidoArea.Content = form;
             }
         }
-
 
         private void Editar_Click(object sender, RoutedEventArgs e)
         {
@@ -73,8 +103,5 @@ namespace Steady_Management_App
                 await ViewModel.LoadClientsAsync();
             }
         }
-
-
-
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Steady_Management.WPF.Views;
 using Steady_Management_App.Models;
+using Steady_Management_App.Models.Steady_Management_App.Models;
 using Steady_Management_App.Services;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Steady_Management_App.Views
 {
@@ -22,12 +24,54 @@ namespace Steady_Management_App.Views
             InitializeComponent();
             ProductsListView.ItemsSource = Products; // Binding una sola vez
             Loaded += ProductListUCView_Loaded;
+            AplicarRestriccionesPorRol();
+        }
+
+        private void AplicarRestriccionesPorRol()
+        {
+            int roleId = UserSession.RoleId;
+
+            if (roleId == 21) // Empleado
+            {
+                // Ocultar botón de agregar producto
+                var addButton = FindButtonInHeader(this, "Agregar Producto");
+                if (addButton != null)
+                    addButton.Visibility = Visibility.Collapsed;
+
+                // Ocultar la última columna (acciones)
+                if (ProductsListView.View is GridView gridView && gridView.Columns.Count > 0)
+                {
+                    gridView.Columns.RemoveAt(gridView.Columns.Count - 1);
+                }
+            }
+        }
+
+        // Buscar botón dentro del header por su contenido
+        private Button? FindButtonInHeader(DependencyObject parent, string contenido)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+
+                if (child is Button btn && btn.Content?.ToString()?.Contains(contenido) == true)
+                    return btn;
+
+                var result = FindButtonInHeader(child, contenido);
+                if (result != null) return result;
+            }
+
+            return null;
         }
 
         private async void ProductListUCView_Loaded(object sender, RoutedEventArgs e)
         {
+            AplicarRestriccionesPorRol();
             await LoadProducts(); // Carga inicial de productos
         }
+
+
+
+
 
         // Carga productos desde el servicio, con categoría
         private async Task LoadProducts()
