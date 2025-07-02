@@ -10,12 +10,12 @@ namespace Steady_Management_App.Services
 {
     public class RoleService
     {
-        private static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient client = HttpClientProvider.Client;
         private readonly string baseUrl = "https://localhost:7284/";
 
 
         public RoleService()
-        {
+        {/*
             if (client.BaseAddress == null)
             {
                 if (string.IsNullOrEmpty(baseUrl))
@@ -23,7 +23,7 @@ namespace Steady_Management_App.Services
 
                 client.BaseAddress = new Uri("https://localhost:7284/"); // o baseUrl
                 client.GetFromJsonAsync<List<Role>>("api/roles");
-            }
+            }*/
         }
 
         // GET: api/roles

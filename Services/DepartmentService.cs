@@ -12,13 +12,13 @@ namespace Steady_Management_App.Services
 {
     public class DepartmentService
     {
-        private static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient client = HttpClientProvider.Client;
         // La URL base ahora se lee desde el archivo de configuración global
         private readonly string baseUrl = "https://localhost:7284/";
 
 
         public DepartmentService() 
-        {
+        {/*
             if (client.BaseAddress == null)
             {
                 if (string.IsNullOrEmpty(baseUrl))
@@ -28,6 +28,8 @@ namespace Steady_Management_App.Services
                 client.BaseAddress = new Uri("https://localhost:7284/");
                 client.GetFromJsonAsync<List<Department>>("api/departments");
             }
+            */
+            //client.GetFromJsonAsync<List<Department>>("api/departments");
         }
 
         // -------------------  READ ALL  -------------------

@@ -10,12 +10,12 @@ namespace Steady_Management_App.Services
 {
     public class ProductService : IProductService
     {
-        private static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient client = HttpClientProvider.Client;
         // La URL base ahora se lee (idealmente) desde appsettings.json,
-        private readonly string baseUrl = "https://localhost:7284/";
+        //private readonly string baseUrl = "https://localhost:7284/";
 
         public ProductService()
-        {
+        {/*
             if (client.BaseAddress == null)
             {
                 if (string.IsNullOrEmpty(baseUrl))
@@ -24,7 +24,7 @@ namespace Steady_Management_App.Services
                 client.BaseAddress = new Uri(baseUrl);
                 // opcional: «calentar» la colección al arrancar
                 _ = client.GetFromJsonAsync<List<Product>>("api/product");
-            }
+            }*/
         }
 
         // ------------------- READ ALL -------------------

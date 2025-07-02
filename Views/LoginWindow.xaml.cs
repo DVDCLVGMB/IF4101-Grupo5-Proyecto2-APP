@@ -1,67 +1,36 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Windows;
-using Steady_Management_App.DTOs;
+﻿using System.Windows;
+using Steady_Management_App.ViewModels;
 
 namespace Steady_Management_App.Views
 {
     public partial class LoginWindow : Window
     {
-        private static readonly HttpClient _http = new HttpClient
-        {
-            BaseAddress = new Uri("https://localhost:7284/")
-        };
+        private readonly LoginViewModel _vm;
 
         public LoginWindow()
         {
             InitializeComponent();
+
+            _vm = new LoginViewModel();
+
+            // Pasamos la contraseña manualmente desde el PasswordBox
+            this.DataContext = _vm;
+
+            // Asignamos el cierre desde el ViewModel
+            _vm.CloseLogin = CloseLogin;
         }
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            ErrorText.Visibility = Visibility.Collapsed;
-
-            var request = new LoginRequestDTO
-            {
-                Username = UsernameBox.Text.Trim(),
-                Password = PasswordBox.Password
-            };
-
-            HttpResponseMessage resp;
-            try
-            {
-                resp = await _http.PostAsJsonAsync("api/Login", request);
-            }
-            catch
-            {
-                ErrorText.Text = "No se pudo conectar al servidor.";
-                ErrorText.Visibility = Visibility.Visible;
-                return;
-            }
-
-            if (resp.IsSuccessStatusCode)
-            {
-                var result = await resp.Content.ReadFromJsonAsync<LoginResponseDTO>();
-                Application.Current.Properties["UserRole"] = result!.RoleId;
-                Application.Current.Properties["UserName"] = result.Username;
-                DialogResult = true;
-            }
-            else if (resp.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                ErrorText.Text = "Usuario o contraseña inválidos.";
-                ErrorText.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                ErrorText.Text = $"Error de servidor: {(int)resp.StatusCode}.";
-                ErrorText.Visibility = Visibility.Visible;
-            }
+            _vm.Password = PasswordBox.Password;
+            await _vm.LoginAsync();
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        public void CloseLogin()
         {
-            DialogResult = false;
+            this.DialogResult = true;   // <-- indica al MainWindow que el login fue OK
+            this.Close();
         }
+
     }
 }

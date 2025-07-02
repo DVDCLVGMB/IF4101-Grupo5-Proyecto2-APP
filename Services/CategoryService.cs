@@ -9,17 +9,17 @@ namespace Steady_Management_App.Services
 {
     public class CategoryService : ICategoryService
     {
-        private static readonly HttpClient client = new HttpClient();
-        private readonly string baseUrl = "https://localhost:7284/";
+        private static readonly HttpClient client = HttpClientProvider.Client;
+        //private readonly string baseUrl = "https://localhost:7284/";
 
         public CategoryService()
-        {
+        {/*
             if (client.BaseAddress == null)
             {
                 client.BaseAddress = new Uri(baseUrl);
                 // opcional: “calentar” la colección
                 _ = client.GetFromJsonAsync<List<Category>>("api/category");
-            }
+            }*/
         }
 
         /// <summary>GET: api/categories</summary>
