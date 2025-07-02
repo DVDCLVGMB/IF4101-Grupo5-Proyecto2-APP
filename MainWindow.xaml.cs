@@ -61,6 +61,15 @@ namespace PedidoApp
 
 
 
+        private void AbrirCrearPedido(object sender, RoutedEventArgs e)
+        {
+            ContenidoArea.Content = new OrderCreateWindow(); // Asegurate que la clase UserControl exista
+        }
+
+        private void AbrirListaPedidos(object sender, RoutedEventArgs e)
+        {
+            ContenidoArea.Content = new Order(); // Cambialo si usás otro nombre para la vista de lista
+        }
 
         private void AbrirPedido(object sender, RoutedEventArgs e)
         {

@@ -117,7 +117,8 @@
                 <MenuItem.Resources>
                     <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
                 </MenuItem.Resources>
-                <MenuItem Header="Realizar Pedido" Click="AbrirPedido"/>
+                <MenuItem Header="Realizar Pedido" Click="AbrirCrearPedido"/>
+                <MenuItem Header="Ver Pedidos" Click="AbrirListaPedidos"/>
             </MenuItem>
             <MenuItem Header="Reportes" x:Name="ReportesMenu">
                 <MenuItem.Resources>
