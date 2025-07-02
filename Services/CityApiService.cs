@@ -9,17 +9,20 @@ namespace Steady_Management_App.Services
 {
     public class CityApiService
     {
-        private static readonly HttpClient _client = new();
-        private readonly string _baseUrl = AppConfig.GetApiBaseUrl();
+        private static readonly HttpClient _client = HttpClientProvider.Client;
+        /// <summary>
+        /// private readonly string _baseUrl = AppConfig.GetApiBaseUrl();
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
 
         public CityApiService()
-        {
+        {/*
             if (_client.BaseAddress == null)
             {
                 if (string.IsNullOrEmpty(_baseUrl))
                     throw new InvalidOperationException("La URL base de la API no está configurada.");
                 _client.BaseAddress = new Uri(_baseUrl);
-            }
+            }*/
         }
 
         public async Task<List<City>> GetCitiesAsync()
