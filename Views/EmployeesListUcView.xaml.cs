@@ -34,18 +34,18 @@ namespace Steady_Management_App.Views
                 emp.RoleName = role?.RoleName ?? "Desconocido";
             }
 
-            EmployeesDataGrid.ItemsSource = employees;
+            // CAMBIO: asignar al ListView en lugar del DataGrid
+            EmployeesListView.ItemsSource = employees;
         }
 
         private void AddEmployee_Click(object sender, RoutedEventArgs e)
         {
             var form = new EmployeeForm();
-            bool? result = form.ShowDialog(); // ✅ espera que se cierre
+            bool? result = form.ShowDialog();
 
-            if (result == true) // ✅ se guarda solo si se presionó guardar
+            if (result == true)
                 LoadEmployees();
         }
-
 
         private void EditEmployee_Click(object sender, RoutedEventArgs e)
         {
@@ -56,7 +56,6 @@ namespace Steady_Management_App.Views
             if (result == true)
                 LoadEmployees();
         }
-
 
         private async void DeleteEmployee_Click(object sender, RoutedEventArgs e)
         {
@@ -72,9 +71,29 @@ namespace Steady_Management_App.Views
                 LoadEmployees();
             }
         }
-        private void EmployeesDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
 
+        // Opcional: si no vas a usarlo, este método se puede eliminar
+        private void EmployeesListView_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var gridView = EmployeesListView.View as GridView;
+            if (gridView == null || gridView.Columns.Count == 0) return;
+
+            double totalWidth = EmployeesListView.ActualWidth;
+
+            // Resta un poco para evitar desbordes visuales por el scroll
+            double availableWidth = totalWidth - 35;
+
+            // Número total de columnas
+            int columnCount = gridView.Columns.Count;
+
+            // Asignar mismo ancho a cada columna
+            double columnWidth = availableWidth / columnCount;
+
+            foreach (var column in gridView.Columns)
+            {
+                column.Width = columnWidth;
+            }
         }
+
     }
 }

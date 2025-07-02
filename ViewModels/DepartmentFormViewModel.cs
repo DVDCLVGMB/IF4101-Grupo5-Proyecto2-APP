@@ -52,7 +52,7 @@ namespace Steady_Management_App.ViewModels
         }
 
         // -------------------- CRUD --------------------
-        private async Task LoadDepartmentsAsync()
+        public async Task LoadDepartmentsAsync()
         {
             IsLoading = true;
             var list = await _apiService.GetDepartmentsAsync();

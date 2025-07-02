@@ -25,7 +25,11 @@ namespace Steady_Management_App.Views
                 new ProductService(),
                 new CategoryService(),
                 productId);
-            vm.RequestClose += () => this.Close();
+            vm.RequestClose += () =>
+            {
+                this.DialogResult = true;  
+                this.Close();
+            };
             this.DataContext = vm;
         }
     }

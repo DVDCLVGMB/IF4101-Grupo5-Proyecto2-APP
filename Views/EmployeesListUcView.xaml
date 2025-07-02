@@ -64,31 +64,30 @@
             </Setter>
         </Style>
 
-        <!-- Estilo para DataGrid moderno -->
-        <Style x:Key="ModernDataGrid" TargetType="DataGrid">
+        <!-- Estilo para ListView Items -->
+        <Style TargetType="ListViewItem">
             <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="RowBackground" Value="White"/>
-            <Setter Property="AlternatingRowBackground" Value="#FFF5F5F5"/>
-            <Setter Property="HeadersVisibility" Value="Column"/>
-            <Setter Property="CanUserAddRows" Value="False"/>
-            <Setter Property="CanUserDeleteRows" Value="False"/>
-            <Setter Property="CanUserResizeRows" Value="False"/>
-            <Setter Property="ColumnHeaderHeight" Value="40"/>
-            <Setter Property="RowHeight" Value="40"/>
-            <Setter Property="ColumnHeaderStyle">
-                <Setter.Value>
-                    <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="Background" Value="#FF1C2331"/>
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="FontWeight" Value="Medium"/>
-                        <Setter Property="Padding" Value="10 0"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                    </Style>
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Style.Triggers>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#FFF5F5F5"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#FFDFE8F6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Estilo para encabezados de GridView -->
+        <Style TargetType="GridViewColumnHeader">
+            <Setter Property="Background" Value="#FF1C2331"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="10 0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="BorderThickness" Value="0"/>
         </Style>
 
     </UserControl.Resources>
@@ -106,9 +105,7 @@
                     <DockPanel LastChildFill="True" VerticalAlignment="Center">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Path Data="M12,12c2.21,0 4-1.79 4-4s-1.79-4-4-4-4,1.79-4,4 1.79,4 4,4zm0,2c-2.67,0-8,1.34-8,4v2h16v-2c0-2.66-5.33-4-8-4z"
-      Fill="White" Width="24" Height="24" Margin="0 0 10 0"/>
-
-                            
+                                  Fill="White" Width="24" Height="24" Margin="0 0 10 0"/>
                             <TextBlock Text="Gestión de Empleados" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Center"/>
                         </StackPanel>
 
@@ -117,7 +114,7 @@
                             <Button.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="16" Margin="0 0 5 0"/>
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="16" Margin="0 0 5 0"/>
                                         <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </DataTemplate>
@@ -129,37 +126,44 @@
                 <!-- Línea separadora -->
                 <Rectangle Height="1" Fill="White" DockPanel.Dock="Top"/>
 
-                <!-- Tabla -->
-                <DataGrid x:Name="EmployeesDataGrid" AutoGenerateColumns="False"
-                          Style="{StaticResource ModernDataGrid}" BorderThickness="0"
-                          SelectionMode="Single" SelectionUnit="FullRow">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Nombre" Binding="{Binding EmployeeName}" Width="*"/>
-                        <DataGridTextColumn Header="Apellido" Binding="{Binding EmployeeSurname}" Width="*"/>
-                        <DataGridTextColumn Header="Extensión" Binding="{Binding Extension}" Width="*"/>
-                        <DataGridTextColumn Header="Teléfono" Binding="{Binding WorkPhoneNumber}" Width="*"/>
-                        <DataGridTextColumn Header="Departamento" Binding="{Binding DepartmentName}" Width="*"/>
-                        <DataGridTextColumn Header="Rol" Binding="{Binding RoleName}" Width="*"/>
-                        <DataGridTemplateColumn Header="Acciones" Width="80">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Style="{StaticResource ModernIconButton}" ToolTip="Editar"
-                                                Click="EditEmployee_Click" Tag="{Binding}" Margin="0,0,5,0">
-                                            <TextBlock Text=""/>
-                                            <!-- Ícono lápiz -->
-                                        </Button>
-                                        <Button Style="{StaticResource ModernIconButton}" ToolTip="Eliminar"
-                                                Click="DeleteEmployee_Click" Tag="{Binding}">
-                                            <TextBlock Text=""/>
-                                            <!-- Ícono papelera -->
-                                        </Button>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <!-- Lista con GridView -->
+                <ListView x:Name="EmployeesListView"
+          Margin="10"
+          Background="White"
+          BorderThickness="0"
+          AlternationCount="2"
+          SelectionMode="Single"
+          SizeChanged="EmployeesListView_SizeChanged">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Nombre" DisplayMemberBinding="{Binding EmployeeName}" />
+                            <GridViewColumn Header="Apellido" DisplayMemberBinding="{Binding EmployeeSurname}" />
+                            <GridViewColumn Header="Extensión" DisplayMemberBinding="{Binding Extension}" />
+                            <GridViewColumn Header="Teléfono" DisplayMemberBinding="{Binding WorkPhoneNumber}" />
+                            <GridViewColumn Header="Departamento" DisplayMemberBinding="{Binding DepartmentName}" />
+                            <GridViewColumn Header="Rol" DisplayMemberBinding="{Binding RoleName}" />
+                            <GridViewColumn Header="Acciones">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Style="{StaticResource ModernIconButton}" ToolTip="Editar"
+                                    Click="EditEmployee_Click" Tag="{Binding}" Margin="0,0,5,0">
+                                                <TextBlock Text="&#xE70F;"/>
+                                                <!-- Icono de lápiz -->
+                                            </Button>
+                                            <Button Style="{StaticResource ModernIconButton}" ToolTip="Eliminar"
+                                    Click="DeleteEmployee_Click" Tag="{Binding}">
+                                                <TextBlock Text="&#xE74D;"/>
+                                                <!-- Icono de basura -->
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
             </DockPanel>
         </Border>
     </Grid>
