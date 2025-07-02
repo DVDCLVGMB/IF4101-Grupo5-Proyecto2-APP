@@ -8,10 +8,12 @@ namespace PedidoApp
 {
     public partial class MainWindow : Window
     {
+        private int roleId;
+
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += MainWindow_Loaded; // Esperar a que cargue para configurar
+            Loaded += MainWindow_Loaded;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -24,18 +26,15 @@ namespace PedidoApp
             string rol = App.Current.Properties["UserRole"]?.ToString() ?? "Invitado";
             string usuario = App.Current.Properties["UserName"]?.ToString() ?? "Desconocido";
 
-            //UsuarioLabel.Text = $"Usuario: {usuario} - Rol: {rol}";
-            int.TryParse(rol, out int roleId);
+            int.TryParse(rol, out roleId);
 
-            // Rol 21: Empleado
-            if (roleId == 21)
+            if (roleId == 21) // Empleado
             {
-                // Ocultar menús
+                // Ocultar completamente secciones para empleados
                 MantenimientoMenu.Visibility = Visibility.Collapsed;
                 ReportesMenu.Visibility = Visibility.Collapsed;
                 ParametrosMenu.Visibility = Visibility.Collapsed;
 
-                // Ocultar botones de la barra
                 btnClientes.Visibility = Visibility.Collapsed;
                 btnInventario.Visibility = Visibility.Collapsed;
                 btnCiudades.Visibility = Visibility.Collapsed;
@@ -43,16 +42,24 @@ namespace PedidoApp
             }
         }
 
-
         // ===================== CRUDs =====================
         private void AbrirClientes(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new ClientsListUcView();
+        {
+            if (roleId == 21) return;
+            ContenidoArea.Content = new ClientsListUcView();
+        }
 
         private void AbrirProductos(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new ProductListUCView();
+        {
+            if (roleId == 21) return;
+            ContenidoArea.Content = new ProductListUCView();
+        }
 
         private void AbrirEmpleados(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new EmployeesListUcView();
+        {
+            if (roleId == 21) return;
+            ContenidoArea.Content = new EmployeesListUcView();
+        }
 
         private void AbrirDepartamentos(object sender, RoutedEventArgs e)
         {
@@ -62,21 +69,22 @@ namespace PedidoApp
             };
         }
 
-  
-
         private void AbrirCiudades(object sender, RoutedEventArgs e)
-    => ContenidoArea.Content = new CitiesListUcView();
+        {
+            if (roleId == 21) return;
+            ContenidoArea.Content = new CitiesListUcView();
+        }
 
         private void AbrirCrearPedido(object sender, RoutedEventArgs e)
         {
-            ContenidoArea.Content = new OrderCreateWindow(); // Asegurate que la clase UserControl exista
+            ContenidoArea.Content = new OrderCreateWindow();
         }
 
         private void AbrirListaPedidos(object sender, RoutedEventArgs e)
         {
-            ContenidoArea.Content = new Order(); // Cambialo si usás otro nombre para la vista de lista
+            ContenidoArea.Content = new Order(); // Ajustar si tenés otra vista
         }
- 
+
         private void AbrirPedido(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Función Pedido aún no implementada.");
@@ -84,21 +92,27 @@ namespace PedidoApp
 
         private void AbrirReporteVentas(object sender, RoutedEventArgs e)
         {
+            if (roleId == 21) return;
             MessageBox.Show("Función Reporte Ventas aún no implementada.");
         }
 
         private void AbrirReporteClientes(object sender, RoutedEventArgs e)
         {
+            if (roleId == 21) return;
             MessageBox.Show("Función Reporte Clientes aún no implementada.");
         }
 
         private void AbrirReporteProductos(object sender, RoutedEventArgs e)
         {
+            if (roleId == 21) return;
             MessageBox.Show("Función Reporte Productos aún no implementada.");
         }
 
         private void AbrirParametros(object sender, RoutedEventArgs e)
-            => ContenidoArea.Content = new ParameterUcView();
+        {
+            if (roleId == 21) return;
+            ContenidoArea.Content = new ParameterUcView();
+        }
 
         // ===================== SESIÓN =====================
         private void CerrarSesion_Click(object sender, RoutedEventArgs e)
