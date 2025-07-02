@@ -1,11 +1,11 @@
-﻿<Window x:Class="Steady_Management_App.Views.OrderClientSelectWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Steady_Management_App.Views"
-        mc:Ignorable="d"
-        Title="OrderClientSelectWindow" Height="450" Width="800">
+﻿<UserControl x:Class="Steady_Management_App.Views.OrderClientSelectUcView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:Steady_Management_App.Views"
+             mc:Ignorable="d">
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,13 +13,13 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Botones de acción arriba -->
+        <!-- Botón de Seleccionar (fase 1) -->
         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <Button Content="Sleccionar" Click="Agregar_Click" Margin="5"/>
+            <Button Content="Seleccionar" Click="Agregar_Click" Margin="5"/>
         </StackPanel>
 
         <!-- Tabla de clientes -->
-        <DataGrid Grid.Row="1"
+        <DataGrid x:Name="ClientDataGrid" Grid.Row="1"
                   ItemsSource="{Binding Clients}"
                   SelectedItem="{Binding SelectedClient}"
                   AutoGenerateColumns="False"
@@ -34,10 +34,22 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Botones de selección -->
+        <!-- Panel con info del cliente seleccionado (oculto por defecto) -->
+        <Border x:Name="SelectedClientPanel" Grid.Row="1" Background="#f3f3f3" Padding="10" Visibility="Collapsed" CornerRadius="5">
+            <StackPanel>
+                <TextBlock Text="Cliente Seleccionado" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                <TextBlock Text="{Binding SelectedClient.CompanyName}" FontSize="14"/>
+                <TextBlock Text="{Binding SelectedClient.ContactName}" FontSize="14"/>
+                <TextBlock Text="{Binding SelectedClient.ContactSurname}" FontSize="14"/>
+                <TextBlock Text="{Binding SelectedClient.ClientPhoneNumber}" FontSize="14"/>
+                <TextBlock Text="{Binding SelectedClient.ClientAddress}" FontSize="14"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Botones finales -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Seleccionar Cliente" Width="140" Click="Select_Click" Margin="5"/>
-            <Button Content="Cancelar" Width="100" Click="Cancel_Click" Margin="5"/>
+            <Button Content="Cambiar Cliente" Width="140" Click="Cancel_Click" Margin="5"/>
+            <Button Content="Continuar" Width="140" Click="Select_Click" Margin="5"/>
         </StackPanel>
     </Grid>
-</Window>
+</UserControl>

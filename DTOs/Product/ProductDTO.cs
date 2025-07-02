@@ -14,6 +14,9 @@ namespace Steady_Management_App.DTOs
 
         public bool IsTaxable { get; set; }
 
+        public string CategoryName { get; set; } = string.Empty; // << Agregado
+
+
         public static implicit operator ProductDTO(Steady_Management_App.Models.Product p)
         {
             if (p == null) return null!;  // o lanza ArgumentNullException
@@ -24,7 +27,8 @@ namespace Steady_Management_App.DTOs
                 ProductName = p.ProductName,
                 CategoryId = p.CategoryId,
                 Price = p.Price,
-                IsTaxable = p.IsTaxable
+                IsTaxable = p.IsTaxable,
+                CategoryName = p.CategoryName
             };
         }
     }

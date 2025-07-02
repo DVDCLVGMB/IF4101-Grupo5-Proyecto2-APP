@@ -29,6 +29,19 @@ public class ProductListViewModel : BaseViewModel
     : this(new ProductService())
     { }
 
+    private readonly ICategoryService? _categoryService;
+
+    public ProductListViewModel(IProductService svc, ICategoryService? categorySvc = null)
+    {
+        _svc = svc ?? throw new ArgumentNullException(nameof(svc));
+        _categoryService = categorySvc ?? throw new ArgumentNullException(nameof(categorySvc));
+
+        LoadCommand = new RelayCommand(async _ => await LoadAsyncWithCategory());
+        // resto igual...
+        _ = LoadAsyncWithCategory();
+    }
+
+
     public ProductListViewModel(IProductService svc)
     {
         _svc = svc ?? throw new ArgumentNullException(nameof(svc));
@@ -43,9 +56,10 @@ public class ProductListViewModel : BaseViewModel
     }
 
     public ProductListViewModel(ProductService productService)
+    : this((IProductService)productService)
     {
-        this.productService = productService;
     }
+
 
     private async Task LoadAsync()
     {
@@ -60,6 +74,33 @@ public class ProductListViewModel : BaseViewModel
             MessageBox.Show($"Error al cargar productos: {ex.Message}");
         }
     }
+
+    private async Task LoadAsyncWithCategory()
+    {
+        try
+        {
+            Products.Clear();
+
+            var productList = await _svc.GetProductsAsync();
+            var categories = await _categoryService.GetCategoriesAsync();
+
+            foreach (var p in productList)
+            {
+                // Asignar nombre categoría manualmente buscando en la lista
+                var category = categories.FirstOrDefault(c => c.CategoryId == p.CategoryId);
+                if (category != null)
+                    p.CategoryName = category.Description;
+
+                Products.Add(p);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error al cargar productos: {ex.Message}");
+        }
+        
+    }
+
 
 
     private void OpenDetail(int id)

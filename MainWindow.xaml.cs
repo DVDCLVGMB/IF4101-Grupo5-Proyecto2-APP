@@ -68,9 +68,9 @@ namespace PedidoApp
     => ContenidoArea.Content = new CitiesListUcView();
 
         private void AbrirCrearPedido(object sender, RoutedEventArgs e)
-        {
-            ContenidoArea.Content = new OrderCreateWindow(); // Asegurate que la clase UserControl exista
-        }
+             => ContenidoArea.Content = new OrderClientSelectUcView(); // ✅ Esto es un UserControl
+
+
 
         private void AbrirListaPedidos(object sender, RoutedEventArgs e)
         {
