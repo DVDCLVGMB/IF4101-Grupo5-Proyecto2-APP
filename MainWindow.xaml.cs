@@ -79,9 +79,7 @@ namespace PedidoApp
             MessageBox.Show("Función Reporte Productos aún no implementada.");
         }
         private void AbrirParametros(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Función Parámetros aún no implementada.");
-        }
+                => ContenidoArea.Content = new ParameterUcView();
 
         /*
         // ==== PEDIDOS ====
