@@ -126,5 +126,12 @@ namespace Steady_Management_App.ViewModels
             await LoadClientsAsync();
             SelectedClient = null;
         }
+
+        public async Task DeleteClientAsync(int clientId)
+        {
+            await _apiService.DeleteClientAsync(clientId);
+            await LoadClientsAsync();
+        }
+
     }
 }

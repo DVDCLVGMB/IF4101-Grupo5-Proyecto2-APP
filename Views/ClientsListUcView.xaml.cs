@@ -1,4 +1,6 @@
 ﻿using PedidoApp;
+using Steady_Management.WPF.Views;
+using Steady_Management_App.Models;
 using Steady_Management_App.ViewModels;
 using Steady_Management_App.Views;
 using System.Windows;
@@ -56,6 +58,22 @@ namespace Steady_Management_App
                 mainWindow.ContenidoArea.Content = form;
             }
         }
+
+        private async void Eliminar_Click(object sender, RoutedEventArgs e)
+        {
+            var client = (Client)((FrameworkElement)sender).DataContext;
+
+            var confirmDialog = new DeleteConfirmationDialog();
+            confirmDialog.Owner = Window.GetWindow(this);
+            confirmDialog.ShowDialog();
+
+            if (confirmDialog.DeleteConfirmed)
+            {
+                await ViewModel.DeleteClientAsync(client.ClientId);
+                await ViewModel.LoadClientsAsync();
+            }
+        }
+
 
 
     }
