@@ -101,7 +101,6 @@ namespace Steady_Management_App.ViewModels
         }
 
 
-
         private async Task DeleteCityAsync()
         {
             if (SelectedCity == null) return;
@@ -113,20 +112,54 @@ namespace Steady_Management_App.ViewModels
             }
             catch (HttpRequestException ex)
             {
-                MessageBox.Show($"Error de red:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    $"Error de red:\n{ex.Message}",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 return;
             }
 
+            // 1) Si borró bien (204) o la ciudad ya no existía (404), refrescas:
             if (resp.IsSuccessStatusCode || resp.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                // Si fue 204 o incluso 404 , refrescamos la lista
                 await LoadCitiesAsync();
                 SelectedCity = null;
+                return;
             }
-            else
+
+            // 2) Si el servidor devolvió 400 Bad Request, lee el mensaje amigable:
+            if (resp.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
-                MessageBox.Show($"Error al eliminar:\n{resp.StatusCode}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                var payload = await resp.Content.ReadAsStringAsync();
+                // payload es algo como {"error":"No se puede eliminar esta ciudad porque tiene clientes asociados."}
+                string errorMsg;
+                try
+                {
+                    
+                    var doc = System.Text.Json.JsonDocument.Parse(payload);
+                    errorMsg = doc.RootElement.GetProperty("error").GetString()!;
+                }
+                catch
+                {
+                    // En caso de que no venga JSON o falle 
+                    errorMsg = payload;
+                }
+
+                MessageBox.Show(
+                    errorMsg,
+                    "No se pudo eliminar la ciudad",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
             }
+
+            // 3) aviso genérico
+            MessageBox.Show(
+                $"Error al eliminar:\n{(int)resp.StatusCode} {resp.ReasonPhrase}",
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
 
 

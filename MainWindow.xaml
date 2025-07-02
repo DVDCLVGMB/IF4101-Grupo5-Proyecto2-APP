@@ -7,6 +7,21 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
+        <Style x:Key="SubmenuStyle" TargetType="MenuItem">
+            <Setter Property="Background" Value="#2D3748"/>
+            <!-- Fondo oscuro -->
+            <Setter Property="Foreground" Value="White"/>
+            <!-- Texto gris claro -->
+            <Setter Property="Padding" Value="12,6"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4A5568"/>
+                    <!-- Hover -->
+                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <SolidColorBrush x:Key="PrimaryDark"     Color="#1F2937"/>
         <SolidColorBrush x:Key="AccentBrush"     Color="#4F46E5"/>
         <SolidColorBrush x:Key="HeaderTextBrush" Color="White"/>
@@ -78,12 +93,19 @@
 
         <!-- MENÚ PRINCIPAL -->
         <Menu DockPanel.Dock="Top" Background="#1b2838" Height="43">
+            
             <MenuItem Header="Archivo">
+                <MenuItem.Resources>
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                </MenuItem.Resources>
                 <MenuItem Header="Cerrar sesión" Click="CerrarSesion_Click"/>
                 <Separator />
                 <MenuItem Header="Salir" Click="Salir_Click"/>
             </MenuItem>
             <MenuItem Header="Gestión" x:Name="MantenimientoMenu">
+                <MenuItem.Resources>
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                </MenuItem.Resources>
                 <MenuItem Header="Clientes" Click="AbrirClientes"/>
                 <MenuItem Header="Productos" Click="AbrirProductos"/>
                 <MenuItem Header="Empleados" Click="AbrirEmpleados"/>
@@ -92,14 +114,23 @@
 
             </MenuItem>
             <MenuItem Header="Pedidos" x:Name="PedidosMenu">
+                <MenuItem.Resources>
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                </MenuItem.Resources>
                 <MenuItem Header="Realizar Pedido" Click="AbrirPedido"/>
             </MenuItem>
             <MenuItem Header="Reportes" x:Name="ReportesMenu">
+                <MenuItem.Resources>
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                </MenuItem.Resources>
                 <MenuItem Header="Ventas" Click="AbrirReporteVentas"/>
                 <MenuItem Header="Clientes" Click="AbrirReporteClientes"/>
                 <MenuItem Header="Productos" Click="AbrirReporteProductos"/>
             </MenuItem>
             <MenuItem Header="Parámetros" x:Name="ParametrosMenu">
+                <MenuItem.Resources>
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource SubmenuStyle}" />
+                </MenuItem.Resources>
                 <MenuItem Header="Configuración General" Click="AbrirParametros"/>
             </MenuItem>
         </Menu>
