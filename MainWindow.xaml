@@ -160,7 +160,7 @@
                 </StackPanel>
             </Button>
 
-            <Button x:Name="btnInventario" ToolTip="Inventario" Click="AbrirProductos">
+            <Button x:Name="btnInventario" ToolTip="Inventario" Click="AbrirInventario">
                 <StackPanel Orientation="Vertical">
                     <TextBlock FontFamily="Segoe MDL2 Assets" Text="" FontSize="24" HorizontalAlignment="Center"/>
                     <TextBlock Text="Inventario" FontSize="11" HorizontalAlignment="Center"/>

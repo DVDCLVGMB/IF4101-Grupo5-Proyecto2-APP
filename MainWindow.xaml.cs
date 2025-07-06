@@ -91,6 +91,11 @@ namespace PedidoApp
             ContenidoArea.Content = new Order(); // Ajustar si tenés otra vista
         }
 
+        private void AbrirInventario(object sender, RoutedEventArgs e)
+        {
+            ContenidoArea.Content = new InventoryListUcView();
+        }
+
         private void AbrirPedido(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Función Pedido aún no implementada.");
