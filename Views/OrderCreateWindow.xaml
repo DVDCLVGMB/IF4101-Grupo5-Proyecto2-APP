@@ -7,4 +7,25 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <DataGrid x:Name="OrderGrid" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Código" Binding="{Binding Product.ProductId}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Nombre" Binding="{Binding Product.ProductName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Precio" Binding="{Binding Product.Price}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Cantidad" Binding="{Binding Quantity}" />
+                <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock x:Name="TotalTaxText" Grid.Row="1" FontSize="16" FontWeight="Bold" Margin="0,10,0,0"/>
+        <TextBlock x:Name="TotalText" Grid.Row="2" FontSize="16" FontWeight="Bold" Margin="0,5,0,0"/>
+    </Grid>
 </UserControl>
+

@@ -76,15 +76,8 @@ namespace PedidoApp
         }
 
         private void AbrirCrearPedido(object sender, RoutedEventArgs e)
-
-        {
-            ContenidoArea.Content = new OrderCreateWindow();
-           // => ContenidoArea.Content = new OrderClientSelectUcView(); 
-        }
-
-             
-
-
+           => ContenidoArea.Content = new OrderClientSelectUcView(); 
+        
 
         private void AbrirListaPedidos(object sender, RoutedEventArgs e)
         {

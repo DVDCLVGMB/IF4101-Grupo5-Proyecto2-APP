@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using PedidoApp;
 using Steady_Management_App.Models;
 using Steady_Management_App.ViewModels;
+using Steady_Management_App.ViewModels.Utility;
 
 namespace Steady_Management_App.Views
 {
@@ -52,6 +53,9 @@ namespace Steady_Management_App.Views
         {
             if (SelectedClient != null)
             {
+                // Guarda el cliente en la "sesión" del pedido
+                OrderSession.SelectedClient = SelectedClient;
+
                 var productosUc = new OrderProductSelectUcView();
 
                 var mainWindow = Application.Current.MainWindow as MainWindow;
@@ -65,6 +69,7 @@ namespace Steady_Management_App.Views
                 MessageBox.Show("Debe seleccionar un cliente primero.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
     }
 }

@@ -20,9 +20,33 @@ namespace Steady_Management_App.Views
     /// </summary>
     public partial class OrderCreateWindow : UserControl
     {
-        public OrderCreateWindow()
+        private OrderDTO _order;
+
+        public OrderCreateWindow(OrderDTO order)
         {
             InitializeComponent();
+            _order = order;
+
+            OrderGrid.ItemsSource = _order.Items;
+
+            // Escuchar cambios en cantidades si deseas
+            OrderGrid.CellEditEnding += OrderGrid_CellEditEnding;
+
+            UpdateTotals();
+        }
+
+        private void OrderGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            // Puedes validar cantidades aquí también si lo necesitas
+            UpdateTotals();
+        }
+
+        private void UpdateTotals()
+        {
+            TotalTaxText.Text = $"Impuesto: ₡{_order.TotalTaxes:N2}";
+            TotalText.Text = $"Total: ₡{_order.Total:N2}";
         }
     }
+
+
 }

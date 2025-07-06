@@ -1,8 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using PedidoApp;
 using Steady_Management_App.DTOs;
 using Steady_Management_App.Services;
 using Steady_Management_App.ViewModels;
+using Steady_Management_App.ViewModels.Utility;
 
 namespace Steady_Management_App.Views
 {
@@ -10,7 +12,8 @@ namespace Steady_Management_App.Views
     {
         private readonly ProductListViewModel _viewModel;
 
-        public ProductDTO? SelectedProduct { get; private set; }
+        private List<ProductDTO> SelectedProducts { get; set; } = new();
+        private bool hasConfirmedSelection = false;
 
         public OrderProductSelectUcView()
         {
@@ -19,41 +22,86 @@ namespace Steady_Management_App.Views
             DataContext = _viewModel;
         }
 
-
         private void Agregar_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.SelectedProduct != null)
+            if (SelectedProducts.Any())
             {
-                SelectedProduct = _viewModel.SelectedProduct;
+                hasConfirmedSelection = true;
 
                 ProductDataGrid.Visibility = Visibility.Collapsed;
                 SelectedProductPanel.Visibility = Visibility.Visible;
+
+                // Refresca la lista de seleccionados
+                SelectedProductsList.ItemsSource = null;
+                SelectedProductsList.ItemsSource = SelectedProducts;
             }
             else
             {
-                MessageBox.Show("Seleccione un producto primero.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Seleccione al menos un producto antes de continuar.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            SelectedProduct = null;
-            _viewModel.SelectedProduct = null;
+            hasConfirmedSelection = false;
 
+            // Limpiar selección visual del DataGrid
+            ProductDataGrid.SelectedItems.Clear();
+
+            // Limpiar lista de productos seleccionados
+            SelectedProducts.Clear();
+
+            // Forzar refresco del DataGrid para quitar los checkboxes marcados
+            ProductDataGrid.Items.Refresh();
+
+            // Ocultar panel de selección
             ProductDataGrid.Visibility = Visibility.Visible;
             SelectedProductPanel.Visibility = Visibility.Collapsed;
         }
 
-        private void Select_Click(object sender, RoutedEventArgs e)
+
+        private void Continue_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedProduct != null)
+            if (!hasConfirmedSelection || !SelectedProducts.Any())
             {
-                MessageBox.Show($"Producto '{SelectedProduct.ProductName}' agregado. Aquí puedes continuar con el pedido.");
-                // Aquí podrías hacer la navegación al siguiente UserControl, por ejemplo para confirmar pedido.
+                MessageBox.Show("Debe seleccionar al menos un producto y presionar el botón 'Seleccionar Producto' antes de continuar.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
-            else
+
+            if (OrderSession.SelectedClient == null)
             {
-                MessageBox.Show("Debe seleccionar un producto primero.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("No hay cliente seleccionado. Vuelva al paso anterior.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var order = new OrderDTO
+            {
+                Customer = OrderSession.SelectedClient,
+                Items = SelectedProducts.Select(p => new OrderItemDTO { Product = p, Quantity = 1 }).ToList()
+            };
+
+            var productosUc = new OrderCreateWindow(order);
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.ContenidoArea.Content = productosUc;
+            }
+        }
+
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox cb && cb.Tag is ProductDTO product && !SelectedProducts.Contains(product))
+            {
+                SelectedProducts.Add(product);
+            }
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox cb && cb.Tag is ProductDTO product && SelectedProducts.Contains(product))
+            {
+                SelectedProducts.Remove(product);
             }
         }
     }
