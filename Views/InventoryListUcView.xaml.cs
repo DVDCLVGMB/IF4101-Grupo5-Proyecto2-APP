@@ -38,7 +38,7 @@ namespace Steady_Management_App.Views
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            var dto = btn?.Tag as InventoryDTO;
+            var dto = btn?.Tag as InventoryResponseDTO;
             if (dto == null) return;
 
             var win = new InventoryFormWindow(dto.InventoryId);
@@ -50,7 +50,7 @@ namespace Steady_Management_App.Views
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            var dto = btn?.Tag as InventoryDTO;
+            var dto = btn?.Tag as InventoryResponseDTO;
             if (dto == null) return;
 
             var confirm = MessageBox.Show(

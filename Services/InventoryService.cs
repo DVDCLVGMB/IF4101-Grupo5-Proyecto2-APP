@@ -17,20 +17,19 @@ namespace Steady_Management_App.Services
         };
 
         // GET: api/inventory
-        public async Task<List<InventoryDTO>> GetInventoriesAsync()
+        public async Task<List<InventoryResponseDTO>> GetInventoriesAsync()
         {
             var resp = await _http.GetAsync("api/inventory");
             var json = await resp.Content.ReadAsStringAsync();
-            MessageBox.Show(json, "JSON en crudo");
-            return JsonSerializer.Deserialize<List<InventoryDTO>>(
+            return JsonSerializer.Deserialize<List<InventoryResponseDTO>>(
                 json,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-            ) ?? new List<InventoryDTO>();
+            ) ?? new List<InventoryResponseDTO>();
         }
 
 
         // POST: api/inventory
-        public async Task<bool> CreateInventoryAsync(InventoryDTO dto)
+        public async Task<bool> CreateInventoryAsync(InventoryResponseDTO dto)
         {
             try
             {
@@ -55,7 +54,7 @@ namespace Steady_Management_App.Services
 
 
         // PUT: api/inventory/{id}
-        public async Task<bool> UpdateInventoryAsync(InventoryDTO dto)
+        public async Task<bool> UpdateInventoryAsync(InventoryResponseDTO dto)
         {
             try
             {
@@ -69,7 +68,7 @@ namespace Steady_Management_App.Services
             }
         }
 
-        // DELETE: api/inventory/{id}
+        // DELETE: api/inventory/{inventoryId}
         public async Task<bool> DeleteInventoryAsync(int inventoryId)
         {
             try
@@ -83,15 +82,16 @@ namespace Steady_Management_App.Services
             }
         }
 
+
         /// <summary>
         /// GET: api/inventory/{id}
         /// Devuelve el inventario o null si no existe
         /// </summary>
-        public async Task<InventoryDTO?> GetByIdAsync(int id)
+        public async Task<InventoryResponseDTO?> GetByIdAsync(int id)
         {
             try
             {
-                return await _http.GetFromJsonAsync<InventoryDTO>($"api/inventory/{id}");
+                return await _http.GetFromJsonAsync<InventoryResponseDTO>($"api/inventory/{id}");
             }
             catch (HttpRequestException)
             {

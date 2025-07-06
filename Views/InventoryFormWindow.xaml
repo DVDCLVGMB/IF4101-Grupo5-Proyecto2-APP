@@ -20,6 +20,7 @@
         <ComboBox Grid.Row="0" Grid.Column="1" x:Name="ProductComboBox"
               DisplayMemberPath="ProductName"
               SelectedValuePath="ProductId"
+              SelectionChanged="ProductComboBox_SelectionChanged"
               Margin="4"/>
 
         <Label Grid.Row="1" Grid.Column="0" Content="Cantidad:" VerticalAlignment="Center"/>

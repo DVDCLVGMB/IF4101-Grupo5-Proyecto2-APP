@@ -2,7 +2,7 @@
 
 namespace Steady_Management_App.DTOs
 {
-    public class InventoryDTO
+    public class InventoryResponseDTO
     {
         public int InventoryId { get; set; }
 

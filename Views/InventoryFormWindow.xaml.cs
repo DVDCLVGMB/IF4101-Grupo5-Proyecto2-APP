@@ -23,23 +23,45 @@ namespace Steady_Management_App.Views
 
         // campos de estado
         private List<Category> _categories = new();
-        private InventoryDTO? _editing;
+        private InventoryResponseDTO? _editing;
 
         private async Task InitializeFormAsync(int inventoryId)
         {
-            // 1) Cargo categorías
+            // 1) Cargo todas las categorías
             _categories = await _catSvc.GetCategoriesAsync();
 
-            // 2) Cargo productos
-            var prods = await _prodSvc.GetProductsAsync();
-            ProductComboBox.ItemsSource = prods;
-            ProductComboBox.DisplayMemberPath = "ProductName";
-            ProductComboBox.SelectedValuePath = "ProductId";
+            // 2) Cargo TODOS los productos
+            var allProducts = await _prodSvc.GetProductsAsync();
 
-            // 3) ¡AHORA me suscribo!
+            // 3) Cargo TODOS los inventarios para saber cuáles ya existen
+            var existingInvs = await _invSvc.GetInventoriesAsync();
+
+            // 4) Dejo sólo los productos que NO tienen inventario asignado
+            var available = allProducts
+                .Where(p => !existingInvs.Any(inv => inv.ProductId == p.ProductId))
+                .ToList();
+
+            // 5) Si esta EDITANDO un inventario existente, 
+            //    debe añadir el producto que ya tiene inventario
+            if (inventoryId > 0)
+            {
+                var current = existingInvs.FirstOrDefault(i => i.InventoryId == inventoryId);
+                if (current != null)
+                {
+                    var prod = allProducts.First(p => p.ProductId == current.ProductId);
+                    available.Add(prod);
+                }
+            }
+
+            // 6) Asigno al ComboBox
+            ProductComboBox.ItemsSource = available;
+            ProductComboBox.DisplayMemberPath = nameof(ProductDTO.ProductName);
+            ProductComboBox.SelectedValuePath = nameof(ProductDTO.ProductId);
+
+            // 7) Suscribo el SelectionChanged (ahora que ya hay items)
             ProductComboBox.SelectionChanged += ProductComboBox_SelectionChanged;
 
-            // 4) Si edito, cargo valores existentes
+            // 8) Si edición, cargo valores existentes
             if (inventoryId > 0)
                 await LoadExistingAsync(inventoryId);
         }
@@ -89,7 +111,7 @@ namespace Steady_Management_App.Views
             // DEBUGGING: confirma que _categories esté rellenado
             System.Diagnostics.Debug.WriteLine($"[{DateTime.Now:HH:mm:ss}] Categories count = {_categories.Count}");
 
-            if (ProductComboBox.SelectedItem is not ProductDTO prod)
+            if (ProductComboBox.SelectedItem is not Product prod)
             {
                 SizeComboBox.IsEnabled = false;
                 return;
@@ -101,7 +123,6 @@ namespace Steady_Management_App.Views
                             ?.Description;
 
             bool needsSize = catDesc == "Ropa"
-                          || catDesc == "Accesorios"
                           || catDesc == "Calzado";
 
             SizeComboBox.IsEnabled = needsSize;
@@ -114,7 +135,7 @@ namespace Steady_Management_App.Views
 
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
-            if (ProductComboBox.SelectedItem is not ProductDTO prod)
+            if (ProductComboBox.SelectedItem is not Product prod)
             {
                 MessageBox.Show("Seleccione un producto.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -126,7 +147,7 @@ namespace Steady_Management_App.Views
                 return;
             }
 
-            var dto = new InventoryDTO
+            var dto = new InventoryResponseDTO
             {
                 InventoryId = _editing?.InventoryId ?? 0,
                 ProductId = prod.ProductId,

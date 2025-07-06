@@ -7,23 +7,73 @@
              Background="#FFF5F5F5"
              d:DesignWidth="800" d:DesignHeight="450">
 
-    <Grid Margin="10">
-        <!-- CABECERA -->
-        <Border Background="#FF1C2331"
+  <UserControl.Resources>
+    <!-- 1) Celdas con padding y línea inferior sutil -->
+    <Style TargetType="DataGridCell">
+      <Setter Property="Padding" Value="8,4"/>
+      <Setter Property="BorderThickness" Value="0,0,0,1"/>
+      <Setter Property="BorderBrush" Value="#FFDDDDDD"/>
+    </Style>
+
+    <!-- 2) Encabezados con fondo oscuro y padding -->
+    <Style TargetType="DataGridColumnHeader">
+      <Setter Property="Padding" Value="12,6"/>
+      <Setter Property="Background" Value="#FF1C2331"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <!-- 3) Botones de ícono modernos -->
+    <Style x:Key="ModernIconButton" TargetType="Button">
+      <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="Width" Value="30"/>
+      <Setter Property="Height" Value="30"/>
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Margin" Value="2,0"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border Background="{TemplateBinding Background}"
+                    CornerRadius="4">
+              <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Background" Value="#EEE"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+  </UserControl.Resources>
+
+  <Grid Margin="10">
+    <!-- CABECERA -->
+    <Border Background="#FF1C2331"
             CornerRadius="8,8,0,0"
             Height="60"
             VerticalAlignment="Top">
-            <DockPanel Margin="20,0">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Left">
+      <DockPanel Margin="20,0">
+                <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Left">
                     <Path Data="M3,13h2v-2H3v2zm0,4h2v-2H3v2zm4-4h14v-2H7v2zm0,4h14v-2H7v2z"
-                Fill="White" Width="24" Height="24" Margin="0,0,10,0"/>
+                Fill="White"
+                Width="24"
+                Height="24"
+                Margin="0,0,10,0"/>
                     <TextBlock Text="Inventarios"
                      Foreground="White"
                      FontSize="18"
                      FontWeight="Bold"
                      VerticalAlignment="Center"/>
                 </StackPanel>
-
                 <Button x:Name="AddInventoryButton"
                 Click="AddInventoryButton_Click"
                 HorizontalAlignment="Right"
@@ -35,11 +85,11 @@
                         <TextBlock Text="Nuevo Inventario"/>
                     </StackPanel>
                 </Button>
-            </DockPanel>
-        </Border>
+      </DockPanel>
+    </Border>
 
-        <!-- GRID DE INVENTARIO -->
-        <DataGrid x:Name="InventoryDataGrid"
+    <!-- GRID DE INVENTARIO -->
+    <DataGrid x:Name="InventoryDataGrid"
               Margin="0,70,0,0"
               AutoGenerateColumns="False"
               CanUserAddRows="False"
@@ -50,39 +100,46 @@
               HeadersVisibility="Column"
               HorizontalGridLinesBrush="#FFDDDDDD">
 
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID"
-                        Binding="{Binding InventoryId}" />
-                <DataGridTextColumn Header="Producto"
-                        Binding="{Binding ProductName}" />
-                <DataGridTextColumn Header="Cantidad"
-                        Binding="{Binding ItemQuantity}" />
-                <DataGridTextColumn Header="Límite"
-                        Binding="{Binding LimitUntilRestock}" />
-                <DataGridTextColumn Header="Talla"
-                        Binding="{Binding Size}" />
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="ID"
+                            Binding="{Binding InventoryId}"
+                            Width="50"/>
+        <DataGridTextColumn Header="Producto"
+                            Binding="{Binding ProductName}"
+                            Width="*"/>
+        <DataGridTextColumn Header="Cantidad"
+                            Binding="{Binding ItemQuantity}"
+                            Width="100"/>
+        <DataGridTextColumn Header="Límite"
+                            Binding="{Binding LimitUntilRestock}"
+                            Width="100"/>
+        <DataGridTextColumn Header="Talla"
+                            Binding="{Binding Size}"
+                            Width="80"/>
 
-                <!-- COLUMNA DE ACCIONES -->
-                <DataGridTemplateColumn Header="Acciones" Width="120">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Click="EditButton_Click"
+        <!-- COLUMNA DE ACCIONES -->
+        <DataGridTemplateColumn Header="Acciones" Width="120">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal"
+                          HorizontalAlignment="Center">
+                <Button Style="{StaticResource ModernIconButton}"
                         ToolTip="Editar"
+                        Click="EditButton_Click"
                         Tag="{Binding}">
-                                    <TextBlock Text="" FontSize="14"/>
-                                </Button>
-                                <Button Click="DeleteButton_Click"
+                  <TextBlock Text=""/>
+                </Button>
+                <Button Style="{StaticResource ModernIconButton}"
                         ToolTip="Eliminar"
+                        Click="DeleteButton_Click"
                         Tag="{Binding}">
-                                    <TextBlock Text="" FontSize="14"/>
-                                </Button>
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-
-    </Grid>
+                  <TextBlock Text=""/>
+                </Button>
+              </StackPanel>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
 </UserControl>
