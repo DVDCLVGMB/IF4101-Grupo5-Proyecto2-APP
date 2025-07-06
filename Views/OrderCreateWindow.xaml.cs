@@ -21,6 +21,8 @@ namespace Steady_Management_App.Views
     public partial class OrderCreateWindow : UserControl
     {
         private OrderDTO _order;
+        private string PaymentMethod = "Efectivo";
+        private string? CardNumber = null;
 
         public OrderCreateWindow(OrderDTO order)
         {
@@ -46,6 +48,39 @@ namespace Steady_Management_App.Views
             TotalTaxText.Text = $"Impuesto: ₡{_order.TotalTaxes:N2}";
             TotalText.Text = $"Total: ₡{_order.Total:N2}";
         }
+
+        private void PaymentMethod_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton rb && rb.Tag is string method)
+            {
+                PaymentMethod = method;
+
+                if (CardNumberTextBox != null)
+                {
+                    CardNumberTextBox.IsEnabled = method == "Tarjeta";
+                }
+            }
+        }
+
+
+        private void FinalizarPedido_Click(object sender, RoutedEventArgs e)
+        {
+            if (PaymentMethod == "Tarjeta")
+            {
+                CardNumber = CardNumberTextBox.Text.Trim();
+                if (string.IsNullOrEmpty(CardNumber) || CardNumber.Length < 12)
+                {
+                    MessageBox.Show("Debe ingresar un número de tarjeta válido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+
+            // Aquí podrías guardar la orden con método de pago
+            MessageBox.Show($"Pedido finalizado con método: {PaymentMethod}\n{(CardNumber != null ? "Tarjeta: " + CardNumber : "")}");
+
+            // Aquí puedes continuar con guardar, actualizar inventario, etc.
+        }
+
     }
 
 

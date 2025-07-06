@@ -34,9 +34,8 @@
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox Tag="{Binding}" 
-                                      IsChecked="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.SelectedProducts, Mode=OneWay}" 
-                                      Checked="CheckBox_Checked" 
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                      Checked="CheckBox_Checked"
                                       Unchecked="CheckBox_Unchecked"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

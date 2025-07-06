@@ -16,6 +16,9 @@ namespace Steady_Management_App.DTOs
 
         public string CategoryName { get; set; } = string.Empty; // << Agregado
 
+        // NUEVA propiedad para el CheckBox
+        public bool IsSelected { get; set; } = false;
+
 
         public static implicit operator ProductDTO(Steady_Management_App.Models.Product p)
         {

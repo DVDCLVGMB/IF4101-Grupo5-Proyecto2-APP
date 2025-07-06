@@ -45,19 +45,19 @@ namespace Steady_Management_App.Views
         {
             hasConfirmedSelection = false;
 
-            // Limpiar selección visual del DataGrid
-            ProductDataGrid.SelectedItems.Clear();
+            // Desmarcar visualmente los CheckBox
+            foreach (var product in _viewModel.Products)
+            {
+                product.IsSelected = false;
+            }
 
-            // Limpiar lista de productos seleccionados
             SelectedProducts.Clear();
+            ProductDataGrid.Items.Refresh(); // Actualiza el DataGrid visual
 
-            // Forzar refresco del DataGrid para quitar los checkboxes marcados
-            ProductDataGrid.Items.Refresh();
-
-            // Ocultar panel de selección
             ProductDataGrid.Visibility = Visibility.Visible;
             SelectedProductPanel.Visibility = Visibility.Collapsed;
         }
+
 
 
         private void Continue_Click(object sender, RoutedEventArgs e)
@@ -91,7 +91,7 @@ namespace Steady_Management_App.Views
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            if (sender is CheckBox cb && cb.Tag is ProductDTO product && !SelectedProducts.Contains(product))
+            if (sender is CheckBox cb && cb.DataContext is ProductDTO product && !SelectedProducts.Contains(product))
             {
                 SelectedProducts.Add(product);
             }
@@ -99,10 +99,11 @@ namespace Steady_Management_App.Views
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            if (sender is CheckBox cb && cb.Tag is ProductDTO product && SelectedProducts.Contains(product))
+            if (sender is CheckBox cb && cb.DataContext is ProductDTO product && SelectedProducts.Contains(product))
             {
                 SelectedProducts.Remove(product);
             }
         }
+
     }
 }
