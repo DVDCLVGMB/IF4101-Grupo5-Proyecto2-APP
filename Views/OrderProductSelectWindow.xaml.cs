@@ -76,7 +76,7 @@ namespace Steady_Management_App.Views
 
             var order = new OrderDTO
             {
-                Customer = OrderSession.SelectedClient,
+                Client = OrderSession.SelectedClient,
                 Items = SelectedProducts.Select(p => new OrderItemDTO { Product = p, Quantity = 1 }).ToList()
             };
 

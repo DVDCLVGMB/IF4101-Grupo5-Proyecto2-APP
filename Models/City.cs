@@ -10,7 +10,7 @@ namespace Steady_Management_App.Models
     public class City
     {
         public int    CityId   { get; set; }
-        public string CityName { get; set; }
+        public string CityName { get; set; } = string.Empty;
         public int    Province { get; set; }
         public string Country  { get; set; }
 

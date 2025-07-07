@@ -1,12 +1,13 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Steady_Management_App.Models;
-using Steady_Management_App.Services;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Steady_Management_App.DTOs;
+using Steady_Management_App.Models;
+using Steady_Management_App.Services;
 
 namespace Steady_Management_App.ViewModels
 {
@@ -31,14 +32,14 @@ namespace Steady_Management_App.ViewModels
         }
 
         [RelayCommand]
-        private void AddProduct(OrderDetail detail)
+        public void AddProduct(OrderDetail detail)
         {
             OrderDetails.Add(detail);
             RecalculateTotals();
         }
 
         [RelayCommand]
-        private void RemoveProduct(OrderDetail detail)
+        public void RemoveProduct(OrderDetail detail)
         {
             OrderDetails.Remove(detail);
             RecalculateTotals();
@@ -52,22 +53,59 @@ namespace Steady_Management_App.ViewModels
         }
 
         [RelayCommand]
-        private async Task CreateOrderAsync()
+        public async Task FinalizarPedidoAsync()
         {
-            var order = new Order
+            if (paymentMethodId == 2 && (string.IsNullOrWhiteSpace(creditCardNumber) || creditCardNumber.Length < 12))
+            {
+                MessageBox.Show("Debe ingresar un número de tarjeta válido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (OrderDetails.Count == 0)
+            {
+                MessageBox.Show("Debe agregar al menos un producto al pedido.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var orderDto = new OrderDTO
             {
                 ClientId = ClientId,
                 CityId = CityId,
-                EmployeeId = 4, // quemado según lo acordado
+                EmployeeId = 4,
                 OrderDate = OrderDate,
-                OrderDetails = OrderDetails.ToList(),
                 PaymentMethodId = PaymentMethodId,
                 CreditCardNumber = PaymentMethodId == 2 ? CreditCardNumber : null,
-                PaymentDate = OrderDate
+                PaymentDate = OrderDate,
+                Items = OrderDetails.Select(od => new OrderItemDTO
+                {
+                    Product = new ProductDTO
+                    {
+                        ProductId = od.ProductId,
+                        ProductName = od.ProductName,
+                        Price = od.UnitPrice,
+                        IsTaxable = od.IsTaxable,
+                        // Asigna otras propiedades necesarias de ProductDTO aquí
+                    },
+                    Quantity = od.Quantity
+                }).ToList()
             };
 
-            await _orderApiService.CreateOrderAsync(order);
+            try
+            {
+                var created = await _orderApiService.CreateOrderAsync(orderDto); // Cambiado de 'order' a 'orderDto'
+                if (created)
+                {
+                    MessageBox.Show("Pedido registrado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo registrar el pedido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Excepción", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
-

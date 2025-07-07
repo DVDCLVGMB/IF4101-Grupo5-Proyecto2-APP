@@ -6,6 +6,7 @@ namespace Steady_Management_App.Models
 {
     public class OrderDetail
     {
+        public int OrderId { get; set; }
         public int ProductId { get; set; }
         public string ProductCode { get; set; } = string.Empty;
         public string ProductName { get; set; } = string.Empty;

@@ -18,9 +18,9 @@ namespace Steady_Management_App.Services
             _httpClient = httpClient;
         }
 
-        public async Task<bool> CreateOrderAsync(Order order)
+        public async Task<bool> CreateOrderAsync(OrderDTO orderDto)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/order", order);
+            var response = await _httpClient.PostAsJsonAsync("api/order", orderDto);
             return response.IsSuccessStatusCode;
         }
     }

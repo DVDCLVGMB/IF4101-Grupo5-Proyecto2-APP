@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Steady_Management_App.Models;
+using Steady_Management_App.Services;
+using Steady_Management_App.ViewModels;
 
 namespace Steady_Management_App.Views
 {
@@ -23,24 +28,45 @@ namespace Steady_Management_App.Views
         private OrderDTO _order;
         private string PaymentMethod = "Efectivo";
         private string? CardNumber = null;
+        private readonly CreateOrderViewModel _viewModel;
 
         public OrderCreateWindow(OrderDTO order)
         {
             InitializeComponent();
             _order = order;
+            _viewModel = new CreateOrderViewModel(new OrderApiService(new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7284/")
+            }));
+
+            _viewModel.ClientId = order.Client.ClientId;
+            _viewModel.CityId = order.Client.CityId;
+            _viewModel.OrderDetails = new ObservableCollection<OrderDetail>(order.Items.Select(i =>
+                new OrderDetail
+                {
+                    ProductId = i.Product.ProductId,
+                   // ProductCode = i.Product.ProductCode,
+                    ProductName = i.Product.ProductName,
+                    UnitPrice = i.Product.Price,
+                    Quantity = i.Quantity,
+                    IsTaxable = i.Product.IsTaxable,
+                    //TaxAmount = i.Product.TaxAmount
+                }));
+            _viewModel.PaymentMethodId = 1;
+
+            DataContext = _viewModel;
 
             OrderGrid.ItemsSource = _order.Items;
-
-            // Escuchar cambios en cantidades si deseas
             OrderGrid.CellEditEnding += OrderGrid_CellEditEnding;
-
             UpdateTotals();
         }
+
 
         private void OrderGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             // Puedes validar cantidades aquí también si lo necesitas
             UpdateTotals();
+            Dispatcher.InvokeAsync(UpdateTotals);
         }
 
         private void UpdateTotals()
@@ -62,23 +88,10 @@ namespace Steady_Management_App.Views
             }
         }
 
-
-        private void FinalizarPedido_Click(object sender, RoutedEventArgs e)
+        private async void FinalizarPedido_Click(object sender, RoutedEventArgs e)
         {
-            if (PaymentMethod == "Tarjeta")
-            {
-                CardNumber = CardNumberTextBox.Text.Trim();
-                if (string.IsNullOrEmpty(CardNumber) || CardNumber.Length < 12)
-                {
-                    MessageBox.Show("Debe ingresar un número de tarjeta válido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-            }
-
-            // Aquí podrías guardar la orden con método de pago
-            MessageBox.Show($"Pedido finalizado con método: {PaymentMethod}\n{(CardNumber != null ? "Tarjeta: " + CardNumber : "")}");
-
-            // Aquí puedes continuar con guardar, actualizar inventario, etc.
+            _viewModel.CreditCardNumber = CardNumberTextBox.Text.Trim();
+            await _viewModel.FinalizarPedidoAsync();
         }
 
     }
