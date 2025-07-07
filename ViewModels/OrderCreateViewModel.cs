@@ -118,11 +118,9 @@ namespace Steady_Management_App.ViewModels
 
             try
             {
-                MessageBox.Show("Enviando pedido...");
-
+                
                 var resultado = await _orderApiService.CreateOrderAsync(orderDto); // ahora devuelve string
-                MessageBox.Show("Respuesta del servidor: " + resultado);
-
+                
                 MessageBox.Show("Pedido registrado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)

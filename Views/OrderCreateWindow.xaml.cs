@@ -28,10 +28,11 @@ namespace Steady_Management_App.Views
     public partial class OrderCreateWindow : UserControl
     {
         private OrderDTO _order;
-        private string PaymentMethod = "Efectivo";
+        //private string PaymentMethod = "Efectivo";
         private string? CardNumber = null;
         private readonly CreateOrderViewModel _viewModel;
         private readonly ProductService _productService;
+        private readonly InventoryService _inventoryService;
 
 
         public OrderCreateWindow(OrderDTO order)
@@ -43,6 +44,8 @@ namespace Steady_Management_App.Views
 
                 _order = order;
                 _productService = new ProductService();
+                _inventoryService = new InventoryService();
+
 
                 _viewModel = new CreateOrderViewModel(new OrderApiService());
 
@@ -62,14 +65,30 @@ namespace Steady_Management_App.Views
             }
         }
 
-
         private async void LoadDataAsync()
         {
             var productosDisponibles = await _productService.GetProductsAsync();
+            var inventarios = await _inventoryService.GetInventoriesAsync();
 
+            // Crear un HashSet con los IDs de productos que tienen inventario disponible (> 0)
+            var productosConStock = new HashSet<int>(
+                inventarios
+                    .Where(inv => inv.ItemQuantity > 0)
+                    .Select(inv => inv.ProductId)
+            );
+
+            // Filtrar detalles para incluir solo productos con inventario
             foreach (var i in _order.OrderDetails)
             {
+                if (!productosConStock.Contains(i.ProductId))
+                {
+                    MessageBox.Show($"El producto '{i.ProductId}' no tiene inventario disponible y será excluido del pedido.",
+                                    "Producto sin inventario", MessageBoxButton.OK, MessageBoxImage.Information);
+                    continue;
+                }
+
                 var producto = productosDisponibles.FirstOrDefault(p => p.ProductId == i.ProductId);
+
                 _viewModel.OrderDetails.Add(new OrderDetailDTO
                 {
                     ProductId = i.ProductId,
@@ -81,16 +100,47 @@ namespace Steady_Management_App.Views
             }
 
             OrderGrid.ItemsSource = _viewModel.OrderDetails;
-            // Recalcula los totales después de llenar
             _viewModel.RecalculateTotals();
             UpdateTotals();
+
+            _viewModel.PaymentMethodId = 1;
+            CardNumberTextBox.IsEnabled = false;
+            efectivoRadio.IsChecked = true;
         }
 
-        private void OrderGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+
+
+        private async void OrderGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            // Puedes validar cantidades aquí también si lo necesitas
-            UpdateTotals();
-            Dispatcher.InvokeAsync(UpdateTotals);
+            var editedDetail = e.Row.Item as OrderDetailDTO;
+            if (editedDetail == null) return;
+
+            int newQuantity = 0;
+            if (e.EditingElement is TextBox tb && int.TryParse(tb.Text, out newQuantity))
+            {
+                // Usar InventoryService para obtener inventario
+                var inventoryList = await _inventoryService.GetInventoriesAsync();
+
+                // Buscar el inventario para el producto editado
+                var inventory = inventoryList.FirstOrDefault(inv => inv.ProductId == editedDetail.ProductId);
+
+                if (inventory == null || inventory.ItemQuantity < newQuantity)
+                {
+                    MessageBox.Show($"No hay suficiente inventario para el producto {editedDetail.ProductName}. Stock disponible: {inventory?.ItemQuantity ?? 0}.",
+                                    "Inventario insuficiente", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                    // Opcional: revertir el cambio a la cantidad disponible
+                    editedDetail.Quantity = inventory?.ItemQuantity ?? 0;
+
+                    // Refrescar el DataGrid para mostrar el cambio
+                    OrderGrid.Items.Refresh();
+                }
+                else
+                {
+                    // Si está ok, actualizar totales normalmente
+                    UpdateTotals();
+                }
+            }
         }
 
         private void UpdateTotals()
@@ -105,7 +155,8 @@ namespace Steady_Management_App.Views
         {
             if (sender is RadioButton rb && rb.Tag is string method)
             {
-                PaymentMethod = method;
+                // Asignar el valor correcto al ViewModel según la selección
+                _viewModel.PaymentMethodId = method == "Tarjeta" ? 2 : 1;
 
                 if (CardNumberTextBox != null)
                 {
@@ -118,12 +169,10 @@ namespace Steady_Management_App.Views
         {
             try
             {
-                MessageBox.Show("Cantidad de productos antes de enviar: " + _viewModel.OrderDetails.Count);
-
+                
                 _viewModel.CreditCardNumber = CardNumberTextBox.Text.Trim();
                 await _viewModel.FinalizarPedidoAsync();
 
-                MessageBox.Show("Pedido enviado correctamente");
             }
             catch (Exception ex)
             {
@@ -134,9 +183,5 @@ namespace Steady_Management_App.Views
                 MessageBox.Show(ex.ToString());
             }
         }
-
-
     }
-
-
 }
