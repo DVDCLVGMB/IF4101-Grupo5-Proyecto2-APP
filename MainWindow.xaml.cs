@@ -76,12 +76,13 @@ namespace PedidoApp
         }
 
         private void AbrirCrearPedido(object sender, RoutedEventArgs e)
-           => ContenidoArea.Content = new OrderClientSelectUcView(); 
-        
+           => ContenidoArea.Content = new OrderClientSelectUcView();
+
 
         private void AbrirListaPedidos(object sender, RoutedEventArgs e)
         {
-            ContenidoArea.Content = new Order(); // Ajustar si tenés otra vista
+            if (roleId == 21) return;                        
+            ContenidoArea.Content = new OrderListUcView(); 
         }
 
         private void AbrirInventario(object sender, RoutedEventArgs e)
