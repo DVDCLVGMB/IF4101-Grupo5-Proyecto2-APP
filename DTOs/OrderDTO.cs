@@ -23,5 +23,5 @@ public class OrderDTO
     public DateTime PaymentDate { get; set; }
     public string CreditCardNumber { get; set; } = string.Empty;
     public decimal PaymentQuantity { get; set; }
-    public int OrderId { get; internal set; }
+    public int OrderId { get; set; }
 }
