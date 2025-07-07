@@ -77,7 +77,14 @@ namespace Steady_Management_App.Views
             var order = new OrderDTO
             {
                 Client = OrderSession.SelectedClient,
-                Items = SelectedProducts.Select(p => new OrderItemDTO { Product = p, Quantity = 1 }).ToList()
+                OrderDetails = SelectedProducts.Select(p => new OrderDetailDTO
+                {
+                    ProductId = p.ProductId,
+                    Quantity = 1,
+                    UnitPrice = p.Price,        // Asumiendo que 'Price' está en ProductDTO
+                    IsTaxable = p.IsTaxable     // Asumiendo que también está aquí
+                }).ToList()
+
             };
 
             var productosUc = new OrderCreateWindow(order);

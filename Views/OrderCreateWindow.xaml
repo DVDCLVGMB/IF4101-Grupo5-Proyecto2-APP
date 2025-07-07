@@ -21,9 +21,9 @@
         <!-- DATAGRID -->
         <DataGrid x:Name="OrderGrid" Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Código" Binding="{Binding Product.ProductId}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Nombre" Binding="{Binding Product.ProductName}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Precio" Binding="{Binding Product.Price}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Código" Binding="{Binding ProductId}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Nombre" Binding="{Binding ProductName}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Precio" Binding="{Binding UnitPrice}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Cantidad" Binding="{Binding Quantity}" />
                 <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal}" IsReadOnly="True"/>
             </DataGrid.Columns>

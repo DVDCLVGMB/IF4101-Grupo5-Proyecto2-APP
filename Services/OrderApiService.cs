@@ -1,27 +1,27 @@
-﻿using Steady_Management_App.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
+using Steady_Management_App.Services;
 
-namespace Steady_Management_App.Services
+public class OrderApiService
 {
-    public class OrderApiService
+    private readonly HttpClient _httpClient;
+
+    public OrderApiService()
     {
-        private readonly HttpClient _httpClient;
+        _httpClient = HttpClientProvider.Client; // <-- usa el que tiene el token
+    }
 
-        public OrderApiService(HttpClient httpClient)
+    public async Task<string> CreateOrderAsync(OrderDTO order)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/Order", order);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
         {
-            _httpClient = httpClient;
+            throw new Exception($"Error del servidor: {response.StatusCode} - {responseContent}");
         }
 
-        public async Task<bool> CreateOrderAsync(OrderDTO orderDto)
-        {
-            var response = await _httpClient.PostAsJsonAsync("api/order", orderDto);
-            return response.IsSuccessStatusCode;
-        }
+        return responseContent;
     }
 }
+

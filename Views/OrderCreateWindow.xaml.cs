@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Steady_Management_App.DTOs;
 using Steady_Management_App.Models;
 using Steady_Management_App.Services;
 using Steady_Management_App.ViewModels;
@@ -29,38 +31,60 @@ namespace Steady_Management_App.Views
         private string PaymentMethod = "Efectivo";
         private string? CardNumber = null;
         private readonly CreateOrderViewModel _viewModel;
+        private readonly ProductService _productService;
+
 
         public OrderCreateWindow(OrderDTO order)
         {
-            InitializeComponent();
-            _order = order;
-            _viewModel = new CreateOrderViewModel(new OrderApiService(new HttpClient
+            try
             {
-                BaseAddress = new Uri("https://localhost:7284/")
-            }));
+                InitializeComponent();
+                Debug.WriteLine("¡OrderCreateWindow fue cargado!");
 
-            _viewModel.ClientId = order.Client.ClientId;
-            _viewModel.CityId = order.Client.CityId;
-            _viewModel.OrderDetails = new ObservableCollection<OrderDetail>(order.Items.Select(i =>
-                new OrderDetail
-                {
-                    ProductId = i.Product.ProductId,
-                   // ProductCode = i.Product.ProductCode,
-                    ProductName = i.Product.ProductName,
-                    UnitPrice = i.Product.Price,
-                    Quantity = i.Quantity,
-                    IsTaxable = i.Product.IsTaxable,
-                    //TaxAmount = i.Product.TaxAmount
-                }));
-            _viewModel.PaymentMethodId = 1;
+                _order = order;
+                _productService = new ProductService();
 
-            DataContext = _viewModel;
+                _viewModel = new CreateOrderViewModel(new OrderApiService());
 
-            OrderGrid.ItemsSource = _order.Items;
-            OrderGrid.CellEditEnding += OrderGrid_CellEditEnding;
-            UpdateTotals();
+
+                _viewModel.ClientId = order.Client.ClientId;
+                _viewModel.CityId = order.Client.CityId;
+                _viewModel.PaymentMethodId = 1;
+
+                DataContext = _viewModel;
+                OrderGrid.CellEditEnding += OrderGrid_CellEditEnding;
+
+                LoadDataAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al crear la vista de pedido:\n" + ex.Message, "Error crítico", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
+
+        private async void LoadDataAsync()
+        {
+            var productosDisponibles = await _productService.GetProductsAsync();
+
+            foreach (var i in _order.OrderDetails)
+            {
+                var producto = productosDisponibles.FirstOrDefault(p => p.ProductId == i.ProductId);
+                _viewModel.OrderDetails.Add(new OrderDetailDTO
+                {
+                    ProductId = i.ProductId,
+                    ProductName = producto?.ProductName ?? "(Desconocido)",
+                    UnitPrice = i.UnitPrice,
+                    Quantity = i.Quantity,
+                    IsTaxable = i.IsTaxable
+                });
+            }
+
+            OrderGrid.ItemsSource = _viewModel.OrderDetails;
+            // Recalcula los totales después de llenar
+            _viewModel.RecalculateTotals();
+            UpdateTotals();
+        }
 
         private void OrderGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
@@ -71,9 +95,11 @@ namespace Steady_Management_App.Views
 
         private void UpdateTotals()
         {
-            TotalTaxText.Text = $"Impuesto: ₡{_order.TotalTaxes:N2}";
-            TotalText.Text = $"Total: ₡{_order.Total:N2}";
+            TotalTaxText.Text = $"Impuesto: ₡{_viewModel.Taxes:N2}";
+            TotalText.Text = $"Total: ₡{_viewModel.Total:N2}";
         }
+
+
 
         private void PaymentMethod_Checked(object sender, RoutedEventArgs e)
         {
@@ -90,9 +116,25 @@ namespace Steady_Management_App.Views
 
         private async void FinalizarPedido_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.CreditCardNumber = CardNumberTextBox.Text.Trim();
-            await _viewModel.FinalizarPedidoAsync();
+            try
+            {
+                MessageBox.Show("Cantidad de productos antes de enviar: " + _viewModel.OrderDetails.Count);
+
+                _viewModel.CreditCardNumber = CardNumberTextBox.Text.Trim();
+                await _viewModel.FinalizarPedidoAsync();
+
+                MessageBox.Show("Pedido enviado correctamente");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al finalizar el pedido:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                // IMPORTANTE: log interno
+                MessageBox.Show("Error detallado:");
+                MessageBox.Show(ex.ToString());
+            }
         }
+
 
     }
 

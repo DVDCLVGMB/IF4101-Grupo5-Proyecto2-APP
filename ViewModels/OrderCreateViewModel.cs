@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,7 +22,7 @@ namespace Steady_Management_App.ViewModels
         [ObservableProperty] private int paymentMethodId;
         [ObservableProperty] private string? creditCardNumber;
 
-        [ObservableProperty] private ObservableCollection<OrderDetail> orderDetails = new();
+        [ObservableProperty] private ObservableCollection<OrderDetailDTO> orderDetails = new();
         [ObservableProperty] private decimal subtotal;
         [ObservableProperty] private decimal taxes;
         [ObservableProperty] private decimal total;
@@ -29,23 +30,53 @@ namespace Steady_Management_App.ViewModels
         public CreateOrderViewModel(OrderApiService orderApiService)
         {
             _orderApiService = orderApiService;
+            OrderDetails.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (OrderDetailDTO item in e.NewItems)
+                    {
+                        item.PropertyChanged += Item_PropertyChanged;
+                    }
+                }
+
+                if (e.OldItems != null)
+                {
+                    foreach (OrderDetailDTO item in e.OldItems)
+                    {
+                        item.PropertyChanged -= Item_PropertyChanged;
+                    }
+                }
+
+                RecalculateTotals();
+            };
+
         }
 
+        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(OrderDetailDTO.Quantity))
+            {
+                RecalculateTotals();
+            }
+        }
+
+
         [RelayCommand]
-        public void AddProduct(OrderDetail detail)
+        public void AddProduct(OrderDetailDTO detail)
         {
             OrderDetails.Add(detail);
             RecalculateTotals();
         }
 
         [RelayCommand]
-        public void RemoveProduct(OrderDetail detail)
+        public void RemoveProduct(OrderDetailDTO detail)
         {
             OrderDetails.Remove(detail);
             RecalculateTotals();
         }
 
-        private void RecalculateTotals()
+        public void RecalculateTotals()
         {
             Subtotal = OrderDetails.Sum(d => d.Subtotal);
             Taxes = OrderDetails.Sum(d => d.TaxAmount);
@@ -57,13 +88,13 @@ namespace Steady_Management_App.ViewModels
         {
             if (paymentMethodId == 2 && (string.IsNullOrWhiteSpace(creditCardNumber) || creditCardNumber.Length < 12))
             {
-                MessageBox.Show("Debe ingresar un número de tarjeta válido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Debe ingresar un número de tarjeta válido.");
                 return;
             }
 
             if (OrderDetails.Count == 0)
             {
-                MessageBox.Show("Debe agregar al menos un producto al pedido.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Debe agregar al menos un producto.");
                 return;
             }
 
@@ -76,36 +107,29 @@ namespace Steady_Management_App.ViewModels
                 PaymentMethodId = PaymentMethodId,
                 CreditCardNumber = PaymentMethodId == 2 ? CreditCardNumber : null,
                 PaymentDate = OrderDate,
-                Items = OrderDetails.Select(od => new OrderItemDTO
+                OrderDetails = OrderDetails.Select(od => new OrderDetailDTO
                 {
-                    Product = new ProductDTO
-                    {
-                        ProductId = od.ProductId,
-                        ProductName = od.ProductName,
-                        Price = od.UnitPrice,
-                        IsTaxable = od.IsTaxable,
-                        // Asigna otras propiedades necesarias de ProductDTO aquí
-                    },
-                    Quantity = od.Quantity
-                }).ToList()
+                    ProductId = od.ProductId,
+                    Quantity = od.Quantity,
+                    UnitPrice = od.UnitPrice
+                }).ToList(),
+                PaymentQuantity = Total
             };
 
             try
             {
-                var created = await _orderApiService.CreateOrderAsync(orderDto); // Cambiado de 'order' a 'orderDto'
-                if (created)
-                {
-                    MessageBox.Show("Pedido registrado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show("No se pudo registrar el pedido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                MessageBox.Show("Enviando pedido...");
+
+                var resultado = await _orderApiService.CreateOrderAsync(orderDto); // ahora devuelve string
+                MessageBox.Show("Respuesta del servidor: " + resultado);
+
+                MessageBox.Show("Pedido registrado correctamente.", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Excepción", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Excepción al registrar pedido:\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
     }
 }
