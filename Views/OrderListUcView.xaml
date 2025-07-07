@@ -26,13 +26,14 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <!--<Button Content="Editar"
-                        Click="EditButton_Click"
-                        Tag="{Binding}"
-                        Margin="0,0,5,0"/>-->
-                                <!--<Button Content="Borrar"
-                        Click="DeleteButton_Click"
-                        Tag="{Binding}"/>-->
+                                <Button Content="✎" Width="24"
+                                Click="EditButton_Click"
+                                Tag="{Binding OrderId}"
+                                ToolTip="Editar"/>
+                                <Button Content="🗑" Width="24"
+                                Click="DeleteButton_Click"
+                                Tag="{Binding OrderId}"
+                                ToolTip="Borrar"/>
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

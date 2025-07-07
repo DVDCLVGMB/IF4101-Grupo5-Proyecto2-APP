@@ -1,0 +1,67 @@
+﻿<Window x:Class="Steady_Management_App.Views.OrderFormWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pedido" Height="300" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Cliente -->
+            <RowDefinition Height="Auto"/>
+            <!-- Empleado -->
+            <RowDefinition Height="Auto"/>
+            <!-- Ciudad -->
+            <RowDefinition Height="Auto"/>
+            <!-- Fecha  -->
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <!-- Botones-->
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Cliente -->
+        <TextBlock Text="Cliente:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="0" Grid.Column="1"
+              ItemsSource="{Binding Clients}"
+              SelectedValuePath="Id"
+              DisplayMemberPath="CompanyName"
+              SelectedValue="{Binding Order.ClientId, Mode=TwoWay}"
+              Margin="5"/>
+
+        <!-- Empleado -->
+        <TextBlock Text="Empleado:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="1" Grid.Column="1"
+              ItemsSource="{Binding Employees}"
+              SelectedValuePath="EmployeeId"
+              DisplayMemberPath="EmployeeName"
+              SelectedValue="{Binding Order.EmployeeId, Mode=TwoWay}"
+              Margin="5"/>
+
+        <!-- Ciudad -->
+        <TextBlock Text="Ciudad:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="2" Grid.Column="1"
+              ItemsSource="{Binding Cities}"
+              SelectedValuePath="CityId"
+              DisplayMemberPath="CityName"
+              SelectedValue="{Binding Order.CityId, Mode=TwoWay}"
+              Margin="5"/>
+
+        <!-- Fecha -->
+        <TextBlock Text="Fecha:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+        <DatePicker Grid.Row="3" Grid.Column="1"
+                SelectedDate="{Binding Order.OrderDate, Mode=TwoWay}"
+                Margin="5"/>
+
+        <!-- Botones -->
+        <StackPanel Grid.Row="5" Grid.ColumnSpan="2"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right">
+            <Button Content="Guardar" Click="SaveButton_Click" Width="80" Margin="5"/>
+            <Button Content="Cancelar" Click="CancelButton_Click" Width="80" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>

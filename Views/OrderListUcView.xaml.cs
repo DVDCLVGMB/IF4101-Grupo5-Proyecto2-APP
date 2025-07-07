@@ -53,32 +53,42 @@ namespace Steady_Management_App.Views
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
             => _ = LoadOrders();
 
-        //private void EditButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    var dto = (OrderDisplayModel)((Button)sender).Tag;
-        //    var win = new OrderFormWindow(dto.OrderId);
-        //    win.Owner = Window.GetWindow(this);
-        //    if (win.ShowDialog() == true)
-        //        _ = LoadOrders();
-        //}
+        // BORRAR
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            int id = (int)((Button)sender).Tag;
+            if (MessageBox.Show(
+                    "¿Eliminar este pedido?",
+                    "Confirmar",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question)
+                != MessageBoxResult.Yes) return;
 
-        //private async void DeleteButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    var dto = (OrderDisplayModel)((Button)sender).Tag;
+            await _orderSvc.DeleteOrderAsync(id);
+            await LoadOrders();
+        }
 
-        //    var confirm = MessageBox.Show(
-        //        "¿Eliminar este pedido?",
-        //        "Confirmar",
-        //        MessageBoxButton.YesNo,
-        //        MessageBoxImage.Question);
+        // EDITAR (Update)
+        private async void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            int id = (int)((Button)sender).Tag;
+            var detail = await _orderSvc.GetOrderAsync(id);
+            if (detail is null) return;
 
-        //    if (confirm != MessageBoxResult.Yes) return;
+            // Mapea al OrderDTO o al OrderRequestDto que uses en tu formulario:
+            var orderToEdit = new OrderDTO
+            {
+                OrderId = detail.OrderId,
+                ClientId = detail.ClientId,
+                EmployeeId = detail.EmployeeId,
+                CityId = detail.CityId,
+                OrderDate = detail.OrderDate
+            };
 
-        //    bool ok = await _orderSvc.DeleteOrderAsync(dto.OrderId);
-        //    if (ok)
-        //        _ = LoadOrders();
-        //    else
-        //        MessageBox.Show("Error al eliminar el pedido.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        //}
+            var win = new OrderFormWindow(orderToEdit);
+            win.Owner = Window.GetWindow(this);
+            if (win.ShowDialog() == true)
+                await LoadOrders();
+        }
     }
 }
